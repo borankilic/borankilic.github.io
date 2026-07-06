@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Node / Astro (once scaffolded)
+node_modules/
+dist/
+.astro/
+
+# Editor
+.vscode/
+.idea/
+
+# Env
+.env
+.env.*
