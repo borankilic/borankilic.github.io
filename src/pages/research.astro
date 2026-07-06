@@ -1,0 +1,118 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CriticalityDivider from '../components/CriticalityDivider.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const research = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const publications = [
+  {
+    authors: 'B. A. Kılıç, Ö. B. Akan',
+    title: 'Neural-Inspired Multi-Agent Molecular Communication Networks for Collective Intelligence',
+    venue: 'MolCom 2026 — 10th Workshop on Molecular Communications',
+    href: base + '/pdfs/projects/molcom/MOLCOM26_paper.pdf',
+  },
+];
+---
+
+<Base title="Research" description="Boran Kılıç's research interests — criticality and collective computation, molecular communication, and quantum sensing.">
+  <header class="page-head shell">
+    <p class="eyebrow">Research</p>
+    <h1>What I'm working on</h1>
+    <div class="page-intro">
+      <p>
+        I'm drawn to a single question asked in different languages: <em>how does
+        rich behaviour emerge from many simple, interacting parts?</em> In physics
+        that's criticality and phase transitions; in the brain it's collective
+        neural dynamics; in engineering it's networks of minimal agents that compute
+        together. I like problems that sit at the seam between these — where a bit of
+        statistical physics buys you real traction on a biological or communication
+        system.
+      </p>
+      <p>
+        The other half of my curiosity is quantum: how information lives in light and
+        matter, and how we read it out. Lately that's meant hands-on work with
+        nitrogen-vacancy centers in diamond.
+      </p>
+    </div>
+  </header>
+
+  <div class="shell"><CriticalityDivider label="threads" /></div>
+
+  <section class="shell threads">
+    {research.map((p) => (
+      <a class="thread" href={`${base}/projects/${p.id}`}>
+        <span class="thread-year mono">{p.data.year}</span>
+        <span class="thread-body">
+          <span class="thread-title">{p.data.title}</span>
+          <span class="thread-blurb">{p.data.blurb}</span>
+          <span class="thread-more mono">Read more →</span>
+        </span>
+      </a>
+    ))}
+  </section>
+
+  <div class="shell"><CriticalityDivider label="publications" /></div>
+
+  <section class="shell pubs">
+    <ol>
+      {publications.map((pub) => (
+        <li>
+          <p class="pub-title">
+            <a href={pub.href} target="_blank" rel="noopener">{pub.title}</a>
+          </p>
+          <p class="pub-meta">{pub.authors}</p>
+          <p class="pub-venue mono">{pub.venue}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="scholar mono">
+      Full list on <a href="https://scholar.google.com/citations?user=9SPQHJEAAAAJ&hl=en" target="_blank" rel="me noopener">Google Scholar ↗</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .page-head { margin-bottom: 1rem; }
+  .page-head h1 { margin: 0.15em 0 0.5em; }
+  .page-intro { max-width: 40rem; }
+  .page-intro p { color: var(--ink-soft); font-size: 1.1rem; }
+
+  .threads { display: grid; gap: 0.4rem; }
+  .thread {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.3rem 0.4rem;
+    border-top: 1px solid var(--faint);
+    color: var(--ink);
+  }
+  .thread:last-child { border-bottom: 1px solid var(--faint); }
+  .thread:hover { text-decoration: none; background: var(--accent-wash); }
+  .thread-year { color: var(--muted); font-size: 0.85rem; }
+  .thread-title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 460;
+    margin-bottom: 0.3rem;
+  }
+  .thread:hover .thread-title { color: var(--accent-deep); }
+  .thread-blurb { display: block; color: var(--ink-soft); margin-bottom: 0.5rem; }
+  .thread-more { font-size: 0.78rem; color: var(--accent); }
+
+  .pubs ol { list-style: none; margin: 0; padding: 0; }
+  .pubs li { padding: 0.5rem 0 1.2rem; }
+  .pub-title { margin: 0 0 0.2rem; font-size: 1.12rem; line-height: 1.35; }
+  .pub-meta { margin: 0 0 0.15rem; color: var(--ink-soft); }
+  .pub-venue { margin: 0; font-size: 0.8rem; color: var(--muted); }
+  .scholar { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+
+  @media (max-width: 34rem) {
+    .thread { grid-template-columns: 1fr; gap: 0.3rem; }
+  }
+</style>

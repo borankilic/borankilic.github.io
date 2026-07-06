@@ -1,0 +1,138 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import CriticalityDivider from '../components/CriticalityDivider.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+import boran from '../assets/boran.png';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base wide>
+  <section class="hero shell-wide">
+    <div class="hero-text">
+      <p class="eyebrow">Quantum optics · Complexity · Intelligence</p>
+      <h1>Boran&nbsp;Kılıç<span class="dot">.</span></h1>
+      <div class="lede">
+        <p>
+          Hi, I'm Boran. I'm interested in <strong>quantum optical information
+          processing</strong> and the <strong>essence of intelligence</strong>. I enjoy
+          learning new things and exploring the universe.
+        </p>
+        <p>
+          I made this website to showcase and document my progress along the way —
+          and in the hope that some of these materials might help a few folks. :)
+        </p>
+      </div>
+      <p class="hero-cta">
+        <a href={base + '/projects'}>See my work →</a>
+        <a href={base + '/resume'}>Resume →</a>
+      </p>
+    </div>
+    <figure class="hero-portrait">
+      <Image src={boran} alt="Portrait of Boran Kılıç" widths={[300, 500, 700]} sizes="(max-width: 40rem) 60vw, 22rem" loading="eager" />
+    </figure>
+  </section>
+
+  <div class="shell-wide">
+    <CriticalityDivider label="selected work" />
+  </div>
+
+  <section class="shell-wide featured">
+    <ol class="feat-list">
+      {projects.map((p) => (
+        <li>
+          <a class="feat" href={`${base}/projects/${p.id}`}>
+            <span class="feat-year mono">{p.data.year}</span>
+            <span class="feat-body">
+              <span class="feat-title">{p.data.title}</span>
+              <span class="feat-blurb">{p.data.blurb}</span>
+            </span>
+            <span class="feat-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+    <p class="all-link"><a href={base + '/projects'}>All projects &amp; research →</a></p>
+  </section>
+
+  <div class="shell-wide">
+    <CriticalityDivider label="get in touch" />
+  </div>
+
+  <section class="shell-wide contact-section">
+    <ContactLinks />
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 20rem);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+    padding-top: clamp(1rem, 4vw, 2.5rem);
+  }
+  .hero h1 {
+    font-size: var(--step-4);
+    margin: 0.1em 0 0.35em;
+  }
+  .dot { color: var(--accent); }
+  .lede { max-width: 34rem; }
+  .lede p { font-size: 1.24rem; line-height: 1.6; color: var(--ink-soft); }
+  .hero-cta {
+    display: flex;
+    gap: 1.75rem;
+    margin-top: 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+  .hero-portrait {
+    margin: 0;
+    justify-self: center;
+  }
+  .hero-portrait :global(img) {
+    width: 100%;
+    max-width: 20rem;
+    height: auto;
+    filter: drop-shadow(0 12px 30px rgba(30, 28, 24, 0.14));
+  }
+
+  .feat-list { list-style: none; margin: 0; padding: 0; }
+  .feat-list li { border-top: 1px solid var(--faint); }
+  .feat-list li:last-child { border-bottom: 1px solid var(--faint); }
+  .feat {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr auto;
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
+    padding: 1.4rem 0.4rem;
+    color: var(--ink);
+  }
+  .feat:hover { text-decoration: none; background: var(--accent-wash); }
+  .feat:hover .feat-title { color: var(--accent-deep); }
+  .feat:hover .feat-arrow { transform: translateX(4px); color: var(--accent); }
+  .feat-year { color: var(--muted); font-size: 0.85rem; padding-top: 0.35rem; }
+  .feat-title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 460;
+    line-height: 1.15;
+    margin-bottom: 0.25rem;
+  }
+  .feat-blurb { display: block; color: var(--ink-soft); font-size: 1.02rem; line-height: 1.5; }
+  .feat-arrow { color: var(--muted); transition: transform 0.15s ease; font-size: 1.2rem; }
+  .all-link { margin-top: 1.4rem; font-family: var(--font-mono); font-size: 0.9rem; }
+
+  @media (max-width: 46rem) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-portrait { order: -1; justify-self: start; }
+    .hero-portrait :global(img) { max-width: 12rem; }
+    .feat { grid-template-columns: 3rem 1fr auto; column-gap: 1rem; }
+  }
+</style>

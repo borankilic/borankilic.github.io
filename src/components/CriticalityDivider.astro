@@ -1,0 +1,82 @@
+---
+/*
+ * Signature mark: a hairline that begins as an ordered lattice of ticks
+ * (left) and dissolves into a scattered, disordered set (right) — a visual
+ * phase transition, the through-line of Boran's work on criticality and the
+ * "edge of chaos." Static (no motion); deterministic so it renders identically.
+ */
+interface Props {
+  label?: string;
+}
+const { label } = Astro.props;
+
+const W = 1000;
+const H = 34;
+const mid = H / 2;
+const N = 72;
+
+// Deterministic pseudo-random so the mark is stable across builds.
+let seed = 2718281;
+const rnd = () => {
+  seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+  return seed / 0x7fffffff;
+};
+
+const ticks = Array.from({ length: N }, (_, i) => {
+  const t = i / (N - 1);
+  // disorder ramps up past the critical point (~0.5)
+  const chaos = Math.max(0, (t - 0.42) / 0.58);
+  const baseX = (t * (W - 24)) + 12;
+  const jitterX = (rnd() - 0.5) * 26 * chaos;
+  const len = 7 + rnd() * 11 * chaos; // taller + varied on the chaotic side
+  const x = baseX + jitterX;
+  const opacity = 0.5 + 0.5 * (1 - chaos) + rnd() * 0.25 * chaos;
+  return { x, y1: mid - len / 2, y2: mid + len / 2, opacity: Math.min(1, opacity) };
+});
+---
+
+<div class="crit" role="separator" aria-label={label ?? 'section divider'}>
+  <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+    <line x1="0" y1={mid} x2={W} y2={mid} class="crit-base" />
+    {ticks.map((t) => (
+      <line x1={t.x} y1={t.y1} x2={t.x} y2={t.y2} stroke-opacity={t.opacity} class="crit-tick" />
+    ))}
+  </svg>
+  {label && <span class="crit-label">{label}</span>}
+</div>
+
+<style>
+  .crit {
+    position: relative;
+    margin: 2.6rem 0;
+  }
+  .crit svg {
+    display: block;
+    width: 100%;
+    height: 34px;
+    overflow: visible;
+  }
+  .crit-base {
+    stroke: var(--faint);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .crit-tick {
+    stroke: var(--accent);
+    stroke-width: 1.4;
+    vector-effect: non-scaling-stroke;
+  }
+  .crit-label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--paper);
+    padding: 0 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+
+const emails = [
+  { label: 'boranaybak34@gmail.com', href: 'mailto:boranaybak34@gmail.com', note: 'personal' },
+  { label: 'borankilic@fas.harvard.edu', href: 'mailto:borankilic@fas.harvard.edu', note: 'Harvard' },
+  { label: 'boran.kilic@std.bogazici.edu.tr', href: 'mailto:boran.kilic@std.bogazici.edu.tr', note: 'Boğaziçi' },
+];
+const profiles = [
+  { label: 'GitHub', href: 'https://github.com/borankilic' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/bkilic7/' },
+  { label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=9SPQHJEAAAAJ&hl=en' },
+];
+---
+
+<div class:list={['contact', { compact }]}>
+  <div class="contact-block">
+    <span class="eyebrow">Email</span>
+    <ul>
+      {emails.map((e) => (
+        <li>
+          <a href={e.href}>{e.label}</a>
+          <span class="note">{e.note}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <div class="contact-block">
+    <span class="eyebrow">Elsewhere</span>
+    <ul class="profiles">
+      {profiles.map((p) => (
+        <li><a href={p.href} target="_blank" rel="me noopener">{p.label} ↗</a></li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem 2.5rem;
+  }
+  .contact.compact { grid-template-columns: 1fr; gap: 1.25rem; }
+  .contact-block .eyebrow { display: block; margin-bottom: 0.6rem; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { margin-bottom: 0.35rem; line-height: 1.4; }
+  .note {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-left: 0.5rem;
+  }
+  .profiles a { font-family: var(--font-body); }
+  @media (max-width: 34rem) {
+    .contact { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,109 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const courses = await getCollection('courses');
+  return courses.map((c) => ({ params: { slug: c.id }, props: { course: c } }));
+}
+
+const { course } = Astro.props;
+const { Content } = await render(course);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const d = course.data;
+
+const kindLabel: Record<string, string> = {
+  pdf: 'PDF',
+  notebook: 'IPYNB',
+  code: 'CODE',
+  slides: 'SLIDES',
+};
+---
+
+<Base title={`${d.code} — ${d.title}`} description={d.summary ?? d.title}>
+  <article class="shell">
+    <p class="back"><a href={base + '/coursework'}>← Coursework</a></p>
+
+    <header class="course-head">
+      <p class="eyebrow">{d.code} · {d.institution} · {d.term}</p>
+      <h1>{d.title}</h1>
+      <div class="prose course-summary"><Content /></div>
+    </header>
+
+    <section class="materials">
+      <h2 class="mat-label">Materials</h2>
+      {d.materials.length === 0 ? (
+        <p class="mat-empty">No distributable materials of my own for this course.</p>
+      ) : (
+        <ul class="mat-list">
+          {d.materials.map((m) => (
+            <li>
+              <a href={base + '/' + m.href} target="_blank" rel="noopener">
+                <span class="mat-name">{m.name}</span>
+                <span class="mat-kind mono">{kindLabel[m.kind ?? 'pdf']}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    <footer class="course-foot">
+      <a href={base + '/coursework'}>← Back to all coursework</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .shell { max-width: 42rem; }
+  .back { font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .back a, .course-foot a { color: var(--muted); }
+  .back a:hover, .course-foot a:hover { color: var(--accent); }
+
+  .course-head h1 { margin: 0.15em 0 0.5em; font-size: var(--step-3); }
+  .course-summary { color: var(--ink-soft); }
+  .course-summary :global(p) { font-size: 1.12rem; }
+
+  .materials { margin-top: 2.5rem; }
+  .mat-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .mat-empty { color: var(--muted); font-style: italic; }
+  .mat-list { list-style: none; margin: 0; padding: 0; }
+  .mat-list li { border-top: 1px solid var(--faint); }
+  .mat-list li:last-child { border-bottom: 1px solid var(--faint); }
+  .mat-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.8rem 0.4rem;
+    color: var(--ink);
+  }
+  .mat-list a:hover { text-decoration: none; background: var(--accent-wash); }
+  .mat-list a:hover .mat-name { color: var(--accent-deep); text-decoration: underline; text-underline-offset: 0.18em; }
+  .mat-name { font-size: 1.02rem; }
+  .mat-kind {
+    font-size: 0.68rem;
+    color: var(--muted);
+    border: 1px solid var(--faint);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .course-foot {
+    margin-top: 3rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+</style>

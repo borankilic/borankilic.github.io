@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title="Blog" description="Writing by Boran Kılıç on intelligence, complexity, criticality, and quantum physics.">
+  <header class="page-head shell">
+    <p class="eyebrow">Blog</p>
+    <h1>Notes to myself, in public</h1>
+    <p class="page-intro">
+      Half-formed ideas about intelligence, complexity, and the quantum world — the
+      things I think about when I'm not doing problem sets.
+    </p>
+  </header>
+
+  <section class="shell">
+    <ul class="post-list">
+      {posts.map((p) => (
+        <li>
+          <a href={`${base}/blog/${p.id}`}>
+            <time class="post-date mono" datetime={p.data.date.toISOString()}>{fmt(p.data.date)}</time>
+            <h2 class="post-title">{p.data.title}</h2>
+            <p class="post-desc">{p.data.description}</p>
+            {p.data.tags.length > 0 && (
+              <p class="post-tags mono">{p.data.tags.join(' · ')}</p>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .page-head { margin-bottom: 2.5rem; }
+  .page-head h1 { margin: 0.15em 0 0.4em; }
+  .page-intro { max-width: 36rem; color: var(--ink-soft); font-size: 1.08rem; }
+
+  .post-list { list-style: none; margin: 0; padding: 0; }
+  .post-list li { border-top: 1px solid var(--faint); }
+  .post-list li:last-child { border-bottom: 1px solid var(--faint); }
+  .post-list a { display: block; padding: 1.6rem 0.4rem; color: var(--ink); }
+  .post-list a:hover { text-decoration: none; }
+  .post-date { font-size: 0.76rem; color: var(--muted); letter-spacing: 0.04em; }
+  .post-title {
+    font-size: var(--step-2);
+    font-weight: 420;
+    line-height: 1.15;
+    margin: 0.3rem 0 0.4rem;
+  }
+  .post-list a:hover .post-title { color: var(--accent-deep); }
+  .post-desc { margin: 0 0 0.5rem; color: var(--ink-soft); max-width: 40rem; }
+  .post-tags { font-size: 0.74rem; color: var(--muted); margin: 0; }
+</style>

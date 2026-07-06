@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const courses = (await getCollection('courses')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const institutions = ['UIUC', 'Boğaziçi University'] as const;
+const byInstitution = institutions.map((inst) => ({
+  inst,
+  courses: courses.filter((c) => c.data.institution === inst),
+}));
+---
+
+<Base title="Coursework" description="Lecture notes, homework, and course projects by Boran Kılıç, from UIUC and Boğaziçi University.">
+  <header class="page-head shell">
+    <p class="eyebrow">Coursework</p>
+    <h1>Notes, homework &amp; course projects</h1>
+    <p class="page-intro">
+      Materials I made as a student — problem-set solutions, notes, and computational
+      assignments — kept here in case they help someone else studying the same things.
+      Everything is my own work; textbooks and official solutions are not reposted.
+    </p>
+  </header>
+
+  <section class="shell">
+    {byInstitution.map(({ inst, courses }) => (
+      <div class="inst-block">
+        <h2 class="inst-name">{inst}</h2>
+        <ul class="course-list">
+          {courses.map((c) => (
+            <li>
+              <a href={`${base}/coursework/${c.id}`}>
+                <span class="course-code mono">{c.data.code}</span>
+                <span class="course-title">{c.data.title}</span>
+                <span class="course-term mono">{c.data.term}</span>
+                <span class="course-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+</Base>
+
+<style>
+  .page-head { margin-bottom: 2.5rem; }
+  .page-head h1 { margin: 0.15em 0 0.4em; }
+  .page-intro { max-width: 38rem; color: var(--ink-soft); font-size: 1.08rem; }
+
+  .inst-block { margin-bottom: 2.75rem; }
+  .inst-name {
+    font-size: var(--step-1);
+    font-weight: 460;
+    color: var(--ink);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+  .course-list { list-style: none; margin: 0; padding: 0; }
+  .course-list li { border-top: 1px solid var(--faint); }
+  .course-list li:last-child { border-bottom: 1px solid var(--faint); }
+  .course-list a {
+    display: grid;
+    grid-template-columns: 5rem 1fr auto auto;
+    align-items: baseline;
+    gap: 0.4rem 1.1rem;
+    padding: 0.95rem 0.4rem;
+    color: var(--ink);
+  }
+  .course-list a:hover { text-decoration: none; background: var(--accent-wash); }
+  .course-code { color: var(--accent); font-size: 0.86rem; font-weight: 500; }
+  .course-title { font-size: 1.08rem; }
+  .course-list a:hover .course-title { color: var(--accent-deep); }
+  .course-term { color: var(--muted); font-size: 0.76rem; }
+  .course-arrow { color: var(--muted); transition: transform 0.15s ease; }
+  .course-list a:hover .course-arrow { transform: translateX(4px); color: var(--accent); }
+
+  @media (max-width: 36rem) {
+    .course-list a { grid-template-columns: 4.2rem 1fr auto; }
+    .course-term { display: none; }
+  }
+</style>

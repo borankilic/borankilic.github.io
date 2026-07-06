@@ -13,3 +13,7 @@ dist/
 # Env
 .env
 .env.*
+
+# Staging area: raw source materials (originals kept on disk, processed copies
+# live in public/ and src/assets/). Keeps the repo lean and under Pages limits.
+uploads/

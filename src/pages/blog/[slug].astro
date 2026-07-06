@@ -1,0 +1,64 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts
+    .filter((p) => !p.data.draft)
+    .map((p) => ({ params: { slug: p.id }, props: { post: p } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const d = post.data;
+const fmt = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title={d.title} description={d.description}>
+  <article class="shell">
+    <p class="back"><a href={base + '/blog'}>← Blog</a></p>
+
+    <header class="post-head">
+      <p class="eyebrow">
+        <time datetime={d.date.toISOString()}>{fmt(d.date)}</time>
+        {d.tags.length > 0 && <span> · {d.tags.join(' · ')}</span>}
+      </p>
+      <h1>{d.title}</h1>
+      <p class="post-dek">{d.description}</p>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="post-foot">
+      <a href={base + '/blog'}>← Back to all posts</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .shell { max-width: 40rem; }
+  .back { font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .back a, .post-foot a { color: var(--muted); }
+  .back a:hover, .post-foot a:hover { color: var(--accent); }
+
+  .post-head { margin-bottom: 2.2rem; }
+  .post-head h1 { margin: 0.3em 0 0.35em; font-size: var(--step-3); line-height: 1.1; }
+  .post-dek {
+    font-size: 1.24rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .post-foot {
+    margin-top: 3rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+</style>

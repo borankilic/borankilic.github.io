@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactLinks from '../components/ContactLinks.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const resumeUrl = base + '/resume.pdf';
+---
+
+<Base title="Resume" description="Boran Kılıç's resume and contact information." wide>
+  <header class="page-head shell-wide">
+    <p class="eyebrow">Resume</p>
+    <div class="head-row">
+      <h1>Resume &amp; contact</h1>
+      <a class="dl" href={resumeUrl} download>Download PDF ↓</a>
+    </div>
+  </header>
+
+  <section class="shell-wide">
+    <div class="viewer">
+      <object data={resumeUrl} type="application/pdf" aria-label="Resume PDF">
+        <div class="viewer-fallback">
+          <p>Your browser can't display the PDF inline.</p>
+          <p><a href={resumeUrl} target="_blank" rel="noopener">Open the resume in a new tab ↗</a></p>
+        </div>
+      </object>
+    </div>
+  </section>
+
+  <section class="shell-wide contact">
+    <h2>Get in touch</h2>
+    <ContactLinks />
+  </section>
+</Base>
+
+<style>
+  .page-head { margin-bottom: 1.75rem; }
+  .head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+  }
+  .page-head h1 { margin: 0.15em 0 0; }
+  .dl {
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .dl:hover { background: var(--accent); color: var(--paper); text-decoration: none; }
+
+  .viewer {
+    border: 1px solid var(--faint);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--paper-raised);
+  }
+  .viewer object {
+    display: block;
+    width: 100%;
+    height: min(80vh, 1000px);
+    border: none;
+  }
+  .viewer-fallback { padding: 2.5rem; text-align: center; color: var(--ink-soft); }
+
+  .contact { margin-top: 3rem; }
+  .contact h2 { font-size: var(--step-1); font-weight: 460; margin-bottom: 1.2rem; }
+</style>
