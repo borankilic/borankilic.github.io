@@ -11,6 +11,7 @@ links:
   - { label: Code (GitHub), href: 'https://github.com/borankilic/NV_center' }
 order: 3
 featured: true
+researchOnly: true
 ---
 
 Nitrogen-vacancy (NV) centers are atomic defects in diamond whose fluorescence depends on the local magnetic field, which makes a diamond a remarkably sensitive, room-temperature magnetometer. I worked on this at the **Quantum Technologies department of TÜBİTAK BİLGEM** — a hands-on experimental project to build the optical and microwave setup and characterise how well it can actually measure a field.

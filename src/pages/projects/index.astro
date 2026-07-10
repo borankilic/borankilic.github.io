@@ -4,9 +4,9 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const projects = (await getCollection('projects')).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+const projects = (await getCollection('projects'))
+  .filter((p) => !p.data.researchOnly)
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base wide title="Projects" description="Research and engineering projects by Boran Kılıç — molecular communication, brain criticality, quantum sensing, signal and image processing.">

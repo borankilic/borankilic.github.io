@@ -18,6 +18,7 @@ const projects = defineCollection({
         .default([]),
       order: z.number().default(99),
       featured: z.boolean().default(false),
+      researchOnly: z.boolean().default(false), // show under Research, not in the Projects grid
     }),
 });
 
