@@ -9,6 +9,7 @@ venue: Boğaziçi University — B.S. thesis
 tags: [Criticality, Connectomics, Statistical physics, Alzheimer's, DTI]
 links:
   - { label: Final report (PDF), href: 'https://borankilic.github.io/pdfs/projects/brain/EE492_report.pdf' }
+  - { label: Code (GitHub), href: 'https://github.com/borankilic/critical_brain' }
 order: 2
 featured: true
 ---

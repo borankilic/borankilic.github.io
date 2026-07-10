@@ -1,11 +1,11 @@
 ---
 title: Neuromorphic Structures Toward Intelligence
-description: Why I keep coming back to the idea that intelligence is a property of the substrate, not just the algorithm — and what "computing at the edge of chaos" really buys you.
+description: Some half-formed thoughts on why intelligence might be as much about the substrate as the algorithm, and what "computing at the edge of chaos" could buy you.
 date: 2026-05-18
 tags: [Intelligence, Complexity, Neuromorphic, Criticality]
 ---
 
-There's a habit of thought I can't shake: whenever I look at something intelligent, I want to know what its parts are doing, not just what the whole is computing. A neuron is almost embarrassingly simple. It integrates inputs, and past a threshold, it fires. That's it. And yet a few billion of them, wired the right way, write poetry and prove theorems and fall in love. The gap between the part and the whole is, to me, the most interesting problem in science.
+A quick caveat before I start: I'm a student thinking out loud here, not an authority, and I'd happily be argued out of any of this. With that said — there's a habit of thought I can't shake. Whenever I look at something intelligent, I want to know what its parts are doing, not just what the whole is computing. A neuron is almost embarrassingly simple. It integrates inputs, and past a threshold, it fires. That's it. And yet a few billion of them, wired the right way, write poetry and prove theorems and fall in love. The gap between the part and the whole is, to me, one of the most interesting problems in science.
 
 ## Intelligence might be a property of the substrate
 

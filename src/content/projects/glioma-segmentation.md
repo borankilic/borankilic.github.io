@@ -9,6 +9,7 @@ venue: Boğaziçi University — Introduction to Image Processing
 tags: [Image processing, Medical imaging, Morphology, BraTS 2021]
 links:
   - { label: Report (PDF), href: 'https://borankilic.github.io/pdfs/projects/brats/EE475_report.pdf' }
+  - { label: Code (GitHub), href: 'https://github.com/borankilic/brats' }
 order: 4
 featured: false
 ---

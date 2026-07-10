@@ -4,15 +4,16 @@ blurb: Building and characterising a diamond nitrogen-vacancy magnetometer — r
 thumb: ../../assets/projects/nv-center-magnetometry/thumb.jpg
 thumbAlt: Optically detected magnetic resonance spectrum showing the characteristic double-dip, raw and reconstructed
 year: '2025'
-role: Experimental physics research · laboratory project
-venue: Quantum sensing laboratory
+role: Experimental research · TÜBİTAK BİLGEM Quantum Technologies
+venue: TÜBİTAK BİLGEM UEKAE — Quantum Technologies department
 tags: [Quantum sensing, NV centers, ODMR, Lock-in detection, Experiment]
-links: []
+links:
+  - { label: Code (GitHub), href: 'https://github.com/borankilic/NV_center' }
 order: 3
 featured: true
 ---
 
-Nitrogen-vacancy (NV) centers are atomic defects in diamond whose fluorescence depends on the local magnetic field, which makes a diamond a remarkably sensitive, room-temperature magnetometer. This is a hands-on experimental project: build the optical and microwave setup, and characterise how well it can actually measure a field.
+Nitrogen-vacancy (NV) centers are atomic defects in diamond whose fluorescence depends on the local magnetic field, which makes a diamond a remarkably sensitive, room-temperature magnetometer. I worked on this at the **Quantum Technologies department of TÜBİTAK BİLGEM** — a hands-on experimental project to build the optical and microwave setup and characterise how well it can actually measure a field.
 
 ## What the experiments cover
 

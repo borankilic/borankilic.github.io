@@ -1,7 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import CriticalityDivider from '../components/CriticalityDivider.astro';
+import interferometer from '../assets/research/interferometer.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const research = (await getCollection('projects'))
@@ -18,29 +20,83 @@ const publications = [
 ];
 ---
 
-<Base title="Research" description="Boran Kılıç's research interests — criticality and collective computation, molecular communication, and quantum sensing.">
+<Base title="Research" description="Boran Kılıç's research — optical quantum information, quantum sensing with NV centers, and criticality in complex systems.">
   <header class="page-head shell">
     <p class="eyebrow">Research</p>
-    <h1>What I'm working on</h1>
+    <h1>What I work on</h1>
     <div class="page-intro">
       <p>
-        I'm drawn to a single question asked in different languages: <em>how does
-        rich behaviour emerge from many simple, interacting parts?</em> In physics
-        that's criticality and phase transitions; in the brain it's collective
-        neural dynamics; in engineering it's networks of minimal agents that compute
-        together. I like problems that sit at the seam between these — where a bit of
-        statistical physics buys you real traction on a biological or communication
-        system.
+        My main interest is <strong>optical quantum information</strong> — how
+        information is carried by light and by the matter it couples to, and how we
+        read it out cleanly enough to be useful. Most of my hands-on work has been
+        experimental: building and characterising the optical, microwave, and
+        electronic pieces that turn a delicate quantum signal into a measurement you
+        can trust.
       </p>
       <p>
-        The other half of my curiosity is quantum: how information lives in light and
-        matter, and how we read it out. Lately that's meant hands-on work with
-        nitrogen-vacancy centers in diamond.
+        Alongside that, I keep returning to a question in complex systems: how
+        rich, collective behaviour emerges from many simple interacting parts, and
+        why so many of these systems sit near a critical point. I'm still learning,
+        and I try to let the physics — not the hype — set the pace.
       </p>
     </div>
   </header>
 
-  <div class="shell"><CriticalityDivider label="threads" /></div>
+  <div class="shell"><CriticalityDivider label="optical quantum information" /></div>
+
+  <section class="shell focus">
+    <h2>Cavity phase readout for an entanglement-assisted telescope</h2>
+    <p>
+      In the Lukin group I work on the <strong>G12 phasecheck interferometer</strong>,
+      the single-node phase-readout subsystem of an entanglement-assisted optical
+      telescope. It is a fibre Mach–Zehnder interferometer built around the reflection
+      arm of a silicon-vacancy (SiV) nanophotonic cavity. Its job is to measure the
+      <em>frequency-dependent phase</em> of the cavity's reflection coefficient across
+      the SiV optical transition — the quantity that tells you whether the cavity is
+      over- or under-coupled, which the reflected intensity alone cannot.
+    </p>
+    <figure class="fig">
+      <Image src={interferometer} alt="Blueprint of the G12 phasecheck interferometer: laser preparation, in-fibre and free-space AOMs, SiV cavity, 46 m fibre delay spool, and APD readout." widths={[600, 1000, 1339]} sizes="(max-width: 44rem) 92vw, 42rem" />
+      <figcaption>
+        The G12 phasecheck setup — two lasers (a fixed Ti:Sa reference and a tunable
+        Toptica probe) interleaved through AOM gates, an unbalanced fibre MZI with the
+        SiV cavity in one arm and a 46 m delay spool in the other, and an FPGA that
+        phase-locks the fringe through the on-table AOMs.
+      </figcaption>
+    </figure>
+    <p>
+      My part of it is the practical end: understanding what every component
+      contributes, deriving the APD signal, path-matching the two arms so the fringe
+      stays visible, and working through the AOM-based phase-locking that holds the
+      interferometer at a chosen operating point. I wrote up the full walkthrough as
+      an internal note.
+    </p>
+    <p class="focus-links mono">
+      <a href={base + '/pdfs/research/g12_interferometry_theory.pdf'} target="_blank" rel="noopener">Setup &amp; locking note (PDF) ↗</a>
+    </p>
+  </section>
+
+  <div class="shell"><CriticalityDivider label="quantum sensing" /></div>
+
+  <section class="shell focus">
+    <h2>NV-center magnetometry at TÜBİTAK Quantum Technologies</h2>
+    <p>
+      At the <strong>Quantum Technologies department of TÜBİTAK BİLGEM</strong> I worked
+      on magnetometry with nitrogen-vacancy (NV) centers in diamond — atomic defects
+      whose fluorescence tracks the local magnetic field, giving a sensitive,
+      room-temperature magnetometer. I helped build and characterise the optical and
+      microwave setup: resolving the hyperfine structure of the optically detected
+      magnetic resonance (ODMR) spectrum, setting up lock-in detection on a
+      frequency-modulated microwave drive, and measuring the sensitivity and dynamic
+      range of the instrument. I also wrote the data-processing and machine-learning
+      pipeline for extracting field estimates from noisy ODMR sweeps.
+    </p>
+    <p class="focus-links mono">
+      <a href={base + '/projects/nv-center-magnetometry'}>Read the full write-up →</a>
+    </p>
+  </section>
+
+  <div class="shell"><CriticalityDivider label="selected projects" /></div>
 
   <section class="shell threads">
     {research.map((p) => (
@@ -80,6 +136,26 @@ const publications = [
   .page-head h1 { margin: 0.15em 0 0.5em; }
   .page-intro { max-width: 40rem; }
   .page-intro p { color: var(--ink-soft); font-size: 1.1rem; }
+
+  .focus { max-width: 42rem; }
+  .focus h2 { font-size: var(--step-2); margin-bottom: 0.7rem; }
+  .focus p { color: var(--ink-soft); }
+  .focus-links { margin-top: 0.4rem; font-size: 0.9rem; }
+  .fig { margin: 1.8rem 0; }
+  .fig :global(img) {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--faint);
+    border-radius: 4px;
+    background: #fff;
+  }
+  .fig figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted);
+    margin-top: 0.6rem;
+    line-height: 1.5;
+  }
 
   .threads { display: grid; gap: 0.4rem; }
   .thread {

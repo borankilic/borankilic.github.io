@@ -9,6 +9,7 @@ venue: Boğaziçi University — Introduction to Digital Signal Processing
 tags: [Signal processing, Wavelets, EEG, Feature extraction]
 links:
   - { label: Report (PDF), href: 'https://borankilic.github.io/pdfs/projects/epilepsy/EE473_report.pdf' }
+  - { label: Code (GitHub), href: 'https://github.com/borankilic/wavelet_seizure_analysis' }
 order: 5
 featured: false
 ---

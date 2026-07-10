@@ -2,10 +2,13 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "astro-preview",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "preview", "--", "--port", "4321"],
-      "port": 4321
+      "name": "astro-static",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "exec python3 -m http.server \"${PORT:-4321}\" --bind 127.0.0.1 --directory /Users/borankilic/Desktop/projects/boran_website/dist"
+      ],
+      "autoPort": true
     }
   ]
 }
