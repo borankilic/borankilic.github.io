@@ -50,28 +50,28 @@ const publications = [
   <section class="shell focus">
     <h2>Cavity phase readout for an entanglement-assisted telescope</h2>
     <p>
-      In the Lukin group I work on the <strong>G12 phasecheck interferometer</strong>,
-      the single-node phase-readout subsystem of an entanglement-assisted optical
-      telescope. It is a fibre Mach–Zehnder interferometer built around the reflection
-      arm of a silicon-vacancy (SiV) nanophotonic cavity. Its job is to measure the
-      <em>frequency-dependent phase</em> of the cavity's reflection coefficient across
-      the SiV optical transition — the quantity that tells you whether the cavity is
-      over- or under-coupled, which the reflected intensity alone cannot.
+      In the Lukin group I built a <strong>fibre “phasecheck” interferometer</strong>,
+      the single-node phase-readout subsystem behind an SiV-based entanglement program.
+      It is a fibre Mach–Zehnder interferometer around the reflection arm of a
+      silicon-vacancy (SiV) nanophotonic cavity, built to measure the
+      <em>frequency-dependent phase</em> of the cavity's reflection coefficient — the
+      quantity that tells you whether the cavity is over- or under-coupled, which the
+      reflected intensity alone cannot. My part was the practical end: the two-laser
+      heterodyne design, path-matching the arms, and the AOM-based phase lock.
     </p>
     <figure class="fig">
       <InterferometerDiagram />
       <figcaption>
-        My schematic of the setup: light returning from the SiV cavity interferes on a
-        fibre beam splitter and is read out on two APDs, with a free-space delay stage
-        forming the reference arm. Below, the lock and probe lasers are each gated by an
-        AOM, then combined and re-split toward the cavity and the delay stage.
+        My schematic of the setup, after my own drawing: probe and phase-locking light
+        splits into a signal arm — in-fibre AOM, then a circulator routing it up to the
+        SiV nanophotonic cavity — and a reference arm through a ~46 m fibre spool. The
+        arms recombine on a 50:50 coupler read out on two APDs, whose signals drive the
+        servo (dashed) that phase-locks the two AOMs. Below, the probe and lock lasers
+        are prepared and combined.
       </figcaption>
     </figure>
-    <p>
-      My part of it is the practical end: understanding what every component
-      contributes, deriving the APD signal, path-matching the two arms so the fringe
-      stays visible, and working through the AOM-based phase-locking that holds the
-      interferometer at a chosen operating point.
+    <p class="focus-links mono">
+      <a href={base + '/research/phase-interferometry'}>Read the full write-up →</a>
     </p>
   </section>
 

@@ -1,0 +1,295 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CriticalityDivider from '../../components/CriticalityDivider.astro';
+import InterferometerDiagram from '../../components/InterferometerDiagram.astro';
+import armTiming from '../../assets/research/arm-length-pulse-timing.jpg';
+import countDrift from '../../assets/research/apd-count-drift.jpg';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base
+  title="Cavity phase readout"
+  description="Building a fibre Mach–Zehnder interferometer to read the reflection phase of a silicon-vacancy nanophotonic cavity — a phase-readout subsystem in the Lukin group at Harvard."
+>
+  <article class="shell">
+    <p class="back"><a href={base + '/research'}>← Research</a></p>
+
+    <header class="proj-head">
+      <p class="eyebrow">2026 · Lukin group, Harvard</p>
+      <h1>A cavity phase interferometer</h1>
+      <p class="proj-blurb">
+        A fibre Mach–Zehnder “phasecheck” interferometer that reads the
+        <em>phase</em> of light reflected from a silicon-vacancy nanophotonic
+        cavity — the single-node phase-readout subsystem behind the group's
+        SiV-based entanglement program.
+      </p>
+
+      <dl class="proj-meta">
+        <div><dt>Role</dt><dd>Visiting Undergraduate Research Fellow</dd></div>
+        <div>
+          <dt>Topics</dt>
+          <dd class="tags">
+            <span class="tag">fibre interferometry</span>
+            <span class="tag">heterodyne detection</span>
+            <span class="tag">phase locking</span>
+            <span class="tag">cavity QED</span>
+            <span class="tag">instrument control</span>
+          </dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="prose">
+      <p>
+        For most of 2026 I built and characterised a fibre interferometer whose
+        one job is to measure the phase of light coming back from an on-chip
+        silicon-vacancy (SiV) cavity. It is a small piece of a much larger
+        machine — the Lukin group's effort to entangle separated SiV centres
+        across nodes — but it is a piece the rest of the program leans on, and
+        it was mine to make work. What follows is an honest account of a
+        prototype: balanced arms and a locking loop that run, not yet a fully
+        characterised instrument.
+      </p>
+
+      <CriticalityDivider label="why phase" />
+
+      <h2>Why phase, not intensity</h2>
+      <p>
+        A recurring problem in this kind of cavity QED is telling an
+        over-coupled cavity apart from an under-coupled one. In a plain
+        reflection spectrum they can look almost identical: the reflected
+        <em>intensity</em> dips in both cases. What separates them is the phase
+        of the reflection coefficient across the optical transition — one state
+        sweeps through a full 2π, the other barely moves. Phase is the clean
+        discriminator, and a bare photodiode throws it away. So the instrument
+        interferes the cavity's reflection against a stable reference arm and
+        reads the relative phase out of the fringe.
+      </p>
+
+      <h2>A two-laser heterodyne design</h2>
+      <p>
+        The setup is a fibre Mach–Zehnder interferometer. Light is split into a
+        signal arm that routes through a circulator to the cavity on the fridge
+        and back, and a reference arm built around a roughly 46 m fibre spool.
+        Two lasers share the path: a narrow-linewidth reference laser that is
+        stable but fixed near the 737 nm SiV line, and a tunable probe laser
+        that is broad and drifty but can sweep several GHz across the cavity
+        resonance. The stable laser defines the phase reference; the tunable one
+        interrogates the cavity.
+      </p>
+      <p>
+        The trick that makes the phase readable is a pair of acousto-optic
+        modulators (AOMs), one in each arm, driven at slightly offset RF
+        frequencies. Their difference frequency puts a heterodyne beat note on
+        the combined light, so the cavity phase rides on the phase of an
+        oscillating APD signal rather than sitting in a DC level. If both arms
+        were at the same optical frequency you would be doing homodyne
+        detection — a static voltage buried in intensity noise and electronic
+        drift. Shifting one arm by a controllable RF offset lifts the phase up
+        onto a beat note that a digitiser can fit cleanly.
+      </p>
+      <figure class="fig diagram">
+        <InterferometerDiagram />
+        <figcaption>
+          Schematic of the setup, after my own drawing. Combined probe and
+          phase-locking light splits into a signal arm — in-fibre AOM, 99:1 tap,
+          then a circulator routing it up to the SiV nanophotonic cavity — and a
+          reference arm through an adjustable attenuator and a ~46 m fibre spool.
+          The arms recombine on a 50:50 coupler read out on two APDs, whose
+          signals drive the servo (dashed) that phase-locks the two in-fibre
+          AOMs. The lower panel shows the probe (Toptica) and lock (TiSa) lasers
+          being gated, combined, and sent to the interferometer input.
+        </figcaption>
+      </figure>
+
+      <CriticalityDivider label="the build" />
+
+      <h2>From a setup under a table to fringes</h2>
+      <p>
+        The project started as salvage. An earlier phase-lock interferometer had
+        been dismantled and pushed under a bench; recovering it meant literally
+        crawling underneath to trace what was left. Rather than resurrect the
+        whole thing, I rebuilt from the simplest possible version — a bare
+        Mach–Zehnder with two beam splitters and a photodiode — and grew it from
+        there.
+      </p>
+      <p>
+        A lot of the early time went into unglamorous fibre work. Free-space to
+        single-mode coupling was punishing: 16 mW in free space could collapse to
+        a quarter of a milliwatt after the fibre, and on bad days to nanowatts,
+        and a nudged collimator could lose the coupling entirely. I learned to
+        splice fibre by hand, characterised the in-fibre polarisers (well over
+        50% insertion loss, which forced a careful polarisation budget), and
+        found that a two-beam-splitter MZI drifted far less than the long-fibre
+        version — a blunt confirmation that the fibre length and polarisation
+        drift, not the lasers, were the dominant noise. The first stable
+        sinusoidal fringes were a genuinely good day. Adding the two AOMs in
+        burst mode from an arbitrary-waveform generator turned that into a
+        working heterodyne interferometer, though the interference still drifted
+        on a ~1 Hz timescale.
+      </p>
+
+      <h2>Balancing the arms</h2>
+      <p>
+        A Mach–Zehnder only gives a clean, frequency-flat fringe if the two arms
+        are close to path-matched; a length mismatch imprints a steep geometric
+        phase ramp as you sweep the laser. My first attempt to measure the
+        imbalance — pulsing the AOMs and watching arrival times on a scope — was
+        too coarse: resolving a 1 cm path difference needs about 300 ps of timing
+        resolution, well past what that method gave. Switching to a burst-timing
+        measurement through the AOMs and the APD signal chain finally resolved it.
+      </p>
+      <figure class="fig">
+        <Image src={armTiming} alt="Two normalized-count pulse curves versus time-since-sync, one per arm, offset by about 9.5 nanoseconds, each with an error-function box fit." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Per-arm pulse-arrival measurement: the reference-AOM and lock-AOM
+          bursts land ~9.5 ns apart, corresponding to about 1.95 m of path
+          difference per measurement. The aggregate arm imbalance came out near
+          12 m, with cm-scale run-to-run variation I never fully explained.
+        </figcaption>
+      </figure>
+      <p>
+        The aggregate imbalance landed around 12 m — larger than I expected, and
+        oddly variable at the centimetre level between runs. I compensated it the
+        direct way: adding roughly 12 m of matching fibre to the free arm so that,
+        with the motorised delay stage parked near 120 mm, the two arms come out
+        balanced and the delay stage has headroom to trim on either side.
+      </p>
+
+      <h2>Locking the phase</h2>
+      <p>
+        Even with balanced arms, thermal and acoustic drift in the fibre walks
+        the phase around, so the interferometer needs active locking. A naive
+        scheme that just stepped through phase indices did not hold. What worked
+        better was calibrating an error signal first: sweep the AOM-inserted
+        phase across [0, 2π], measure the difference of the two APD channels,
+        and read off the slope at the operating point to set the gain of a
+        proportional-integral controller. The lock partially holds — it reduces
+        the drift but does not yet kill it — and getting the acquisition fast
+        enough (tens of milliseconds per cycle) was a real constraint on the loop.
+      </p>
+      <figure class="fig">
+        <Image src={countDrift} alt="Two APD count-rate traces over 30 seconds oscillating in anti-phase between roughly 400 and 900 thousand counts per second." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Residual drift after length compensation: the two APD output ports
+          swing in anti-phase over 30 s — the signature of slow phase drift
+          moving power between the interferometer's two outputs. Suppressing this
+          is exactly what the lock is meant to do, and where the work stands now.
+        </figcaption>
+      </figure>
+      <p>
+        The control side grew alongside the optics. The Newport DL235 delay stage
+        runs from Python drivers I wrote (after untangling its status and error
+        codes so it actually waits for motion to finish); the oscilloscope,
+        arbitrary-waveform generator, time tagger and DC supply are all networked
+        through pylabnet, and I pulled them together into a single GUI so the
+        whole stack drives from one interface. Late in the project we brought in a
+        RedPitaya to orchestrate the lock — SSH-accessible with its oscilloscope
+        feature working, though its vector-analyser mode I never got running.
+      </p>
+
+      <CriticalityDivider label="status" />
+
+      <h2>What I picked up</h2>
+      <p>
+        Concretely, the build taught me fibre splicing and handling; polarisation
+        control and polarimetry across a multi-component fibre setup; RF
+        electronics for AOM drive (amplifier gain, burst-mode sequencing, drive
+        limits); laser frequency behaviour and wavemeter-feedback tuning; and a
+        fair amount of instrument-control software — device drivers, networked
+        client/server control, and a GUI to sit on top of it all.
+      </p>
+
+      <h2>Where it stands</h2>
+      <p>
+        As of July 2026 the interferometer is physically built, the arms are
+        balanced, and a PI locking loop runs — but it is a working prototype, not
+        a finished instrument. The lock is only partially stable, the residual
+        drift above is not yet suppressed to where it needs to be, and full
+        characterisation is ongoing. It is the honest state of an apprentice
+        build: the hard parts mostly work, and the last, fussiest part —
+        holding the phase rock-steady — is still in progress.
+      </p>
+    </div>
+
+    <footer class="proj-foot">
+      <a href={base + '/research'}>← Back to research</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .shell { max-width: 44rem; }
+  .back { font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .back a, .proj-foot a { color: var(--muted); }
+  .back a:hover, .proj-foot a:hover { color: var(--accent); }
+
+  .proj-head { margin-bottom: 2rem; }
+  .proj-head h1 { margin: 0.15em 0 0.3em; font-size: var(--step-3); }
+  .proj-blurb {
+    font-size: 1.24rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 38rem;
+  }
+  .proj-meta {
+    margin: 1.8rem 0 0;
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.2rem 0 0;
+    border-top: 1px solid var(--faint);
+  }
+  .proj-meta > div {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .proj-meta dt {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .proj-meta dd { margin: 0; color: var(--ink-soft); }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--accent-deep);
+    background: var(--accent-wash);
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  .fig { margin: 2rem 0; }
+  .fig :global(img) {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--faint);
+    border-radius: 4px;
+    background: #fff;
+  }
+  .fig.diagram { margin: 2.2rem 0; }
+  .fig figcaption {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted);
+    margin-top: 0.6rem;
+    line-height: 1.5;
+  }
+
+  .proj-foot {
+    margin-top: 3rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+  @media (max-width: 34rem) {
+    .proj-meta > div { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+</style>
