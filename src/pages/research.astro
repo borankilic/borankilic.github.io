@@ -14,10 +14,32 @@ const research = (await getCollection('projects'))
 
 const publications = [
   {
+    authors: 'Ö. Güngör, B. A. Kılıç, et al.',
+    title: 'Quantum Magnetic Anomaly Detection Using Nitrogen-Vacancy Centers in Diamond',
+    venue: 'KOBIT 2025 · Poster presentation',
+  },
+  {
+    authors: 'B. A. Kılıç, Ö. B. Akan',
+    title: 'Multi-Ratio Shift Keying (MRSK) Modulation for Molecular Communication',
+    venue: 'IEEE Transactions on Communications, vol. 73, no. 10 · Oct 2025',
+  },
+  {
+    authors: 'D. Yüksel Dal, B. A. Kılıç, G. Gamgam',
+    title: 'Local brain connectome parameters across the spectrum of clinical cognitive decline',
+    venue: 'Frontiers in Neuroscience, 20:1840382 · 2026',
+    href: 'https://doi.org/10.3389/fnins.2026.1840382',
+  },
+  {
     authors: 'B. A. Kılıç, Ö. B. Akan',
     title: 'Neural-Inspired Multi-Agent Molecular Communication Networks for Collective Intelligence',
-    venue: 'MolCom 2026 — 10th Workshop on Molecular Communications',
+    venue: 'MolCom 2026 (MOLCOM26) · Abstract',
     href: base + '/pdfs/projects/molcom/MOLCOM26_paper.pdf',
+  },
+  {
+    authors: 'B. A. Kılıç, K. Pine, N. Weiskopf',
+    title: 'Synthetic Image and Multi-Coil K-space Data Generation From Multi-Parameter Maps',
+    venue: 'ISMRM 2026 · Digital poster',
+    href: 'https://echo.ismrm.org/conferences/ISMRM2026/digital-poster/13628',
   },
 ];
 ---
@@ -155,9 +177,13 @@ const publications = [
       {publications.map((pub) => (
         <li>
           <p class="pub-title">
-            <a href={pub.href} target="_blank" rel="noopener">{pub.title}</a>
+            {pub.href ? (
+              <a href={pub.href} target="_blank" rel="noopener">{pub.title}</a>
+            ) : (
+              pub.title
+            )}
           </p>
-          <p class="pub-meta">{pub.authors}</p>
+          <p class="pub-meta" set:html={pub.authors.replace('B. A. Kılıç', '<strong>B. A. Kılıç</strong>')}></p>
           <p class="pub-venue mono">{pub.venue}</p>
         </li>
       ))}
