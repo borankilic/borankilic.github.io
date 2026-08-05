@@ -1,0 +1,205 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CriticalityDivider from '../../components/CriticalityDivider.astro';
+import interferometerThumb from '../../assets/research/interferometer_thumb.jpg';
+import nvThumb from '../../assets/research/nv_thumb.jpg';
+import synMriThumb from '../../assets/research/synthetic_mri_thumb.jpg';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const entries = [
+  {
+    slug: 'phase-interferometry',
+    card: 'Phase Interferometry',
+    title: 'Phase Interferometry for Room-Temperature Characterization of Nanophotonic Cavities',
+    blurb:
+      'A fibre Mach–Zehnder interferometer that reads the reflection phase of a nanophotonic cavity — resolving over- from under-coupling, which the reflected intensity alone cannot.',
+    thumb: interferometerThumb,
+    alt: 'Reflection phase of a cavity versus detuning for over-, critically, and under-coupled regimes.',
+    year: '2026',
+    where: 'Lukin group, Harvard',
+  },
+  {
+    slug: 'nv-magnetometry',
+    card: 'NV-Center Magnetometry',
+    title: 'CW-ODMR and Lock-in Magnetometry with Nitrogen-Vacancy Centers',
+    blurb:
+      'A room-temperature diamond magnetometer: continuous-wave ODMR, square-wave frequency modulation, and lock-in readout reaching ~10 nT/√Hz.',
+    thumb: nvThumb,
+    alt: 'Block diagram of the NV magnetometer: 532 nm laser path, microwave chain, and lock-in detection electronics.',
+    year: '2025',
+    where: 'TÜBİTAK BILGEM',
+  },
+  {
+    slug: 'synthetic-mri',
+    card: 'Synthetic MRI',
+    title: 'Synthetic Image and Multi-Coil K-space Generation From Multi-Parameter Maps',
+    blurb:
+      'Physics-consistent MR images — and the raw multi-coil k-space behind them — synthesised from quantitative parameter maps for training reconstruction models.',
+    thumb: synMriThumb,
+    alt: 'Grid of synthesised MR contrasts with per-coil images and their k-spaces.',
+    year: '2025',
+    where: 'Max Planck Institute, Leipzig',
+  },
+];
+
+const publications = [
+  {
+    authors: 'Ö. Güngör, B. A. Kılıç, et al.',
+    title: 'Quantum Magnetic Anomaly Detection Using Nitrogen-Vacancy Centers in Diamond',
+    venue: 'KOBIT 2025 · Poster presentation',
+  },
+  {
+    authors: 'B. A. Kılıç, Ö. B. Akan',
+    title: 'Multi-Ratio Shift Keying (MRSK) Modulation for Molecular Communication',
+    venue: 'IEEE Transactions on Communications, vol. 73, no. 10 · Oct 2025',
+  },
+  {
+    authors: 'D. Yüksel Dal, B. A. Kılıç, G. Gamgam',
+    title: 'Local brain connectome parameters across the spectrum of clinical cognitive decline',
+    venue: 'Frontiers in Neuroscience, 20:1840382 · 2026',
+    href: 'https://doi.org/10.3389/fnins.2026.1840382',
+  },
+  {
+    authors: 'B. A. Kılıç, Ö. B. Akan',
+    title: 'Neural-Inspired Multi-Agent Molecular Communication Networks for Collective Intelligence',
+    venue: 'MolCom 2026 (MOLCOM26) · Abstract',
+    href: base + '/pdfs/projects/molcom/MOLCOM26_paper.pdf',
+  },
+  {
+    authors: 'B. A. Kılıç, K. Pine, N. Weiskopf',
+    title: 'Synthetic Image and Multi-Coil K-space Data Generation From Multi-Parameter Maps',
+    venue: 'ISMRM 2026 · Digital poster',
+    href: 'https://echo.ismrm.org/conferences/ISMRM2026/digital-poster/13628',
+  },
+];
+---
+
+<Base wide title="Research" description="Boran Kılıç's research — optical quantum information, quantum sensing with NV centers, and the physics of MR image synthesis.">
+  <header class="page-head shell-wide">
+    <p class="eyebrow">Research</p>
+    <h1>What I work on</h1>
+    <p class="page-intro">
+      My main interest is <strong>optical quantum information</strong> — how information is
+      carried by light and the matter it couples to, and how to read it out cleanly enough
+      to be useful. Most of my hands-on work is experimental: building and characterising
+      the optical, microwave, and electronic pieces that turn a delicate quantum signal
+      into a measurement you can trust. I've also worked on the physics of medical imaging.
+    </p>
+  </header>
+
+  <section class="shell-wide">
+    <ul class="grid">
+      {entries.map((e) => (
+        <li>
+          <a class="card" href={`${base}/research/${e.slug}`}>
+            <div class="card-media">
+              <Image src={e.thumb} alt={e.alt} widths={[400, 800]} sizes="(max-width: 40rem) 92vw, 28rem" />
+              <div class="card-veil"><p>{e.blurb}</p><span class="card-cta mono">Read →</span></div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta mono"><span>{e.year}</span><span>{e.where}</span></div>
+              <h2>{e.card}</h2>
+              <p class="card-sub">{e.title}</p>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <div class="shell-wide"><CriticalityDivider label="publications" /></div>
+
+  <section class="shell pubs">
+    <ol>
+      {publications.map((pub) => (
+        <li>
+          <p class="pub-title">
+            {pub.href ? (
+              <a href={pub.href} target="_blank" rel="noopener">{pub.title}</a>
+            ) : (
+              pub.title
+            )}
+          </p>
+          <p class="pub-meta" set:html={pub.authors.replace('B. A. Kılıç', '<strong>B. A. Kılıç</strong>')}></p>
+          <p class="pub-venue mono">{pub.venue}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="scholar mono">
+      Full list on <a href="https://scholar.google.com/citations?user=9SPQHJEAAAAJ&hl=en" target="_blank" rel="me noopener">Google Scholar ↗</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .page-head { margin-bottom: 2.5rem; }
+  .page-head h1 { margin: 0.15em 0 0.4em; }
+  .page-intro { max-width: 42rem; color: var(--ink-soft); font-size: 1.1rem; }
+
+  .grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+  }
+  .card {
+    display: flex; flex-direction: column; height: 100%;
+    color: var(--ink);
+    border: 1px solid var(--faint); border-radius: 6px;
+    overflow: hidden; background: #fff;
+    transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .card:hover, .card:focus-visible {
+    text-decoration: none; border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 34px rgba(30, 28, 24, 0.1);
+  }
+  .card-media {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--paper-raised);
+    border-bottom: 1px solid var(--faint);
+  }
+  .card-media :global(img) {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.4s ease, filter 0.25s ease;
+  }
+  .card-veil {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center; gap: 0.6rem;
+    padding: 1.1rem 1.25rem;
+    background: color-mix(in srgb, var(--ink) 88%, transparent);
+    color: var(--paper);
+    opacity: 0; transition: opacity 0.22s ease;
+  }
+  .card-veil p { margin: 0; font-size: 0.97rem; line-height: 1.45; }
+  .card-cta { font-size: 0.78rem; letter-spacing: 0.08em; color: #cfd1ee; }
+  .card:hover .card-veil, .card:focus-visible .card-veil { opacity: 1; }
+  .card:hover .card-media :global(img) { transform: scale(1.03); }
+
+  .card-body { padding: 1.1rem 1.25rem 1.4rem; display: flex; flex-direction: column; gap: 0.3rem; }
+  .card-meta {
+    display: flex; justify-content: space-between; gap: 0.75rem;
+    font-size: 0.72rem; color: var(--muted);
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .card-body h2 { font-size: var(--step-1); font-weight: 460; line-height: 1.18; margin: 0.1rem 0 0; }
+  .card:hover .card-body h2 { color: var(--accent-deep); }
+  .card-sub { margin: 0; color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
+
+  /* Touch devices have no hover: show the explanation inline instead of on a veil. */
+  @media (hover: none) {
+    .card-veil { display: none; }
+    .card-sub { color: var(--ink-soft); }
+  }
+
+  .pubs ol { list-style: none; margin: 0; padding: 0; }
+  .pubs li { padding: 0.5rem 0 1.2rem; }
+  .pub-title { margin: 0 0 0.2rem; font-size: 1.12rem; line-height: 1.35; }
+  .pub-meta { margin: 0 0 0.15rem; color: var(--ink-soft); }
+  .pub-venue { margin: 0; font-size: 0.8rem; color: var(--muted); }
+  .scholar { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+</style>

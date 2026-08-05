@@ -1,0 +1,261 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CriticalityDivider from '../../components/CriticalityDivider.astro';
+import nvSetup from '../../assets/research/nv_setup.png';
+import odmr from '../../assets/projects/nv-center-magnetometry/odmr.png';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base
+  title="NV-center magnetometry"
+  description="A room-temperature diamond magnetometer based on continuous-wave ODMR of nitrogen-vacancy ensembles, with square-wave frequency modulation and lock-in readout reaching about 10 nT/√Hz."
+>
+  <article class="shell">
+    <p class="back"><a href={base + '/research'}>← Research</a></p>
+
+    <header class="proj-head">
+      <p class="eyebrow">2024–2026 · TÜBİTAK BİLGEM, Quantum Technologies</p>
+      <h1>CW-ODMR and Lock-in Magnetometry with Nitrogen-Vacancy Centers</h1>
+      <p class="proj-blurb">
+        A diamond magnetometer built around continuous-wave optically detected magnetic
+        resonance. Square-wave frequency modulation of the microwave drive converts the
+        resonance dip into a dispersive lock-in signal that is linear in field at its zero
+        crossing — giving a calibrated 36 µT/V response and a noise floor near 10 nT/√Hz.
+      </p>
+
+      <dl class="proj-meta">
+        <div><dt>Role</dt><dd>Summer intern, then part-time researcher</dd></div>
+        <div>
+          <dt>Topics</dt>
+          <dd class="tags">
+            <span class="tag">quantum sensing</span>
+            <span class="tag">ODMR</span>
+            <span class="tag">lock-in detection</span>
+            <span class="tag">spin Hamiltonian</span>
+            <span class="tag">magnetometry</span>
+          </dd>
+        </div>
+        <div>
+          <dt>Materials</dt>
+          <dd class="links">
+            <a href="https://github.com/borankilic/NV_center" target="_blank" rel="noopener">Code (GitHub) ↗</a>
+          </dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="prose">
+      <h2>The sensor</h2>
+      <p>
+        The negatively charged nitrogen-vacancy center is a point defect — a substitutional
+        nitrogen next to a lattice vacancy — whose ground state is a spin-1 triplet with a
+        zero-field splitting <em>D</em> ≈ 2.87 GHz between <em>m</em><sub>s</sub> = 0 and
+        <em>m</em><sub>s</sub> = ±1. Including the Zeeman term and the hyperfine coupling to
+        the host <sup>14</sup>N nucleus (<em>I</em> = 1), the ground-state spin Hamiltonian is
+      </p>
+
+      <div class="eq">
+        <em>H</em>/<em>h</em> = <em>D S</em><sub><em>z</em></sub><sup>2</sup>
+        + <em>γ</em><sub>e</sub> <strong>B</strong>·<strong>S</strong>
+        + <strong>S</strong>·<em>A</em>·<strong>I</strong>
+      </div>
+
+      <p>
+        with <em>γ</em><sub>e</sub> = <em>g</em><sub>e</sub><em>μ</em><sub>B</sub>/<em>h</em>
+        ≈ 28.02 GHz/T. To first order the Zeeman interaction splits the
+        <em>m</em><sub>s</sub> = ±1 levels symmetrically about <em>D</em>, so the two resonances
+        separate by
+      </p>
+
+      <div class="eq">
+        Δ<em>f</em> = 2<em>γ</em><sub>e</sub><em>B</em><sub>∥</sub>
+      </div>
+
+      <p>
+        where <em>B</em><sub>∥</sub> is the field projected on the NV symmetry axis. The
+        hyperfine term splits each resonance further into three lines separated by
+        <em>A</em><sub>∥</sub> ≈ 2.16 MHz. Green 532 nm light both polarises the spin into
+        <em>m</em><sub>s</sub> = 0 and reads it out: when a swept microwave tone hits a
+        transition, population leaves the bright state and the photoluminescence drops.
+      </p>
+
+      <figure class="fig">
+        <Image src={nvSetup} alt="Block diagram of the magnetometer: 532 nm laser, beam splitter, dichroic mirror, aspheric lens onto the diamond, long-pass filter and photodetectors; and the electronic chain with RF generator, amplifier, Helmholtz coils and lock-in amplifier." widths={[600, 1000, 1500]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          The instrument. <strong>Optical:</strong> a 532 nm pump focused by a 10.6 mm aspheric
+          lens; fluorescence in the 637–800 nm band is collected by the same lens, separated by
+          a dichroic, cleaned by a long-pass filter and detected on two photodiodes.
+          <strong>Electronic:</strong> a microwave source, square-wave frequency modulated and
+          amplified into a loop antenna, with Helmholtz coils for field control and a lock-in
+          amplifier referenced to the modulation.
+        </figcaption>
+      </figure>
+
+      <CriticalityDivider label="lock-in readout" />
+
+      <h2>Why modulate</h2>
+      <p>
+        A single ODMR feature is a Lorentzian dip on a bright background,
+      </p>
+
+      <div class="eq">
+        <em>F</em>(<em>ω</em>) = <em>F</em><sub>0</sub>
+        <span class="brk">[</span>1 −
+        <span class="frac"><span class="num"><em>C</em></span><span class="den">1 + 4(<em>ω</em>−<em>ω</em><sub>0</sub>)<sup>2</sup>/<em>ν</em><sup>2</sup></span></span>
+        <span class="brk">]</span>
+      </div>
+
+      <p>
+        with contrast <em>C</em> and FWHM <em>ν</em> ≈ 18.3 MHz for our ensemble. Reading this
+        dip directly means fitting a resonance sitting on top of laser-intensity drift and
+        1/<em>f</em> noise — unstable in practice. Instead the carrier is square-wave frequency
+        modulated,
+      </p>
+
+      <div class="eq">
+        <em>ω</em><sub>MW</sub>(<em>t</em>) = <em>ω</em><sub>C</sub>
+        + <em>ω</em><sub>dev</sub> · square(2π<em>f</em><sub>mod</sub><em>t</em>),
+        <span class="eq-where">f<sub>mod</sub> = 18 kHz</span>
+      </div>
+
+      <p>
+        which moves the measurement band far above the 1/<em>f</em> corner. Demodulating at
+        <em>f</em><sub>mod</sub> returns the <em>difference</em> of the lineshape sampled at
+        <em>ω</em><sub>C</sub> ± <em>ω</em><sub>dev</sub> — a dispersive, derivative-like curve
+        that crosses zero exactly at <em>ω</em><sub>C</sub> = <em>ω</em><sub>0</sub>.
+      </p>
+
+      <p>
+        Sensitivity is set by the slope at that zero crossing, and differentiating the
+        demodulated lineshape shows the slope is steepest at a specific modulation depth:
+      </p>
+
+      <div class="eq">
+        <em>ω</em><sub>dev</sub> = <span class="frac"><span class="num"><em>ν</em></span><span class="den">2√3</span></span>
+      </div>
+
+      <p>
+        Operated there, the lock-in output is linear in applied field over the useful range,
+        and the inverse of the measured slope is the voltage-to-field conversion factor —
+        calibrated against a fluxgate reference to
+      </p>
+
+      <div class="eq">
+        <em>κ</em> = <em>γ</em><sub><em>B</em></sub><sup>−1</sup> = 36 µT/V
+      </div>
+
+      <figure class="fig">
+        <Image src={odmr} alt="Raw noisy ODMR sweep beside the reconstructed spectrum showing the characteristic double-dip resonance after denoising." widths={[600, 1000, 1139]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Raw photodetector sweep (left) and the reconstruction retaining only above-threshold
+          frequency components (right). Before lock-in detection was in place, recovering the
+          resonance from the raw trace required moving-average, low-pass and FFT-threshold
+          filtering — which is precisely the fragility the modulated scheme removes.
+        </figcaption>
+      </figure>
+
+      <h2>Sensitivity</h2>
+      <p>
+        With no test field applied, the lock-in X-channel trace is converted to field units,
+        <em>B</em><sub>meas</sub>(<em>t</em>) = <em>κ V</em><sub>LIA</sub>(<em>t</em>), and the
+        sensitivity over a trial of duration <em>T</em> follows the standard definition
+      </p>
+
+      <div class="eq">
+        <em>η</em> = <em>σ</em><sub><em>B</em></sub> ⁄ √(2<em>f</em><sub>ENBW</sub>)
+      </div>
+
+      <p>
+        where <em>f</em><sub>ENBW</sub> is the equivalent noise bandwidth of the lock-in
+        low-pass filter. Equivalently, the FFT of
+        <em>B</em><sub>meas</sub>(<em>t</em>) resolves the noise floor per unit bandwidth.
+        With a 3 ms time constant this gives roughly <strong>100 nT/√Hz in the 10–100 Hz
+        band</strong> — limited by low-frequency technical noise — improving to about
+        <strong>10 nT/√Hz above 200 Hz</strong>. The time constant trades bandwidth against
+        smoothing: longer constants lower the cutoff and quieten the output at the cost of
+        temporal resolution.
+      </p>
+
+      <h2>Where it goes next</h2>
+      <ul>
+        <li><strong>Balanced detection</strong> to reject common-mode laser intensity noise, which currently dominates the low-frequency floor.</li>
+        <li><strong>Hyperfine-driven multi-tone excitation</strong> — driving all three <sup>14</sup>N hyperfine lines at once to recover contrast lost to the splitting.</li>
+        <li><strong>Closed-loop (PI) tracking</strong> of the zero crossing, which extends the dynamic range beyond the linear span of a fixed-carrier measurement.</li>
+      </ul>
+
+      <p>
+        A related application of this platform — detecting magnetic anomalies with NV
+        ensembles — was presented as a poster at <strong>KOBIT 2025</strong>.
+      </p>
+    </div>
+
+    <footer class="proj-foot">
+      <a href={base + '/research'}>← Back to research</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .shell { max-width: 44rem; }
+  .back { font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .back a, .proj-foot a { color: var(--muted); }
+  .back a:hover, .proj-foot a:hover { color: var(--accent); }
+
+  .proj-head { margin-bottom: 2rem; }
+  .proj-head h1 { margin: 0.15em 0 0.35em; font-size: var(--step-3); line-height: 1.12; }
+  .proj-blurb { font-size: 1.18rem; line-height: 1.55; color: var(--ink-soft); max-width: 40rem; }
+  .proj-meta {
+    margin: 1.8rem 0 0; display: grid; gap: 0.9rem;
+    padding: 1.2rem 0 0; border-top: 1px solid var(--faint);
+  }
+  .proj-meta > div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; align-items: baseline; }
+  .proj-meta dt {
+    font-family: var(--font-mono); font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+  .proj-meta dd { margin: 0; color: var(--ink-soft); }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; }
+  .tag {
+    font-family: var(--font-mono); font-size: 0.74rem;
+    color: var(--accent-deep); background: var(--accent-wash);
+    padding: 0.15rem 0.5rem; border-radius: 3px;
+  }
+  .links { display: flex; flex-direction: column; gap: 0.3rem; align-items: start; }
+  .links a { font-family: var(--font-mono); font-size: 0.86rem; }
+
+  .fig { margin: 2rem 0; }
+  .fig :global(img) {
+    display: block; width: 100%;
+    border: 1px solid var(--faint); border-radius: 4px; background: #fff;
+  }
+  .fig figcaption {
+    font-family: var(--font-mono); font-size: var(--step--1);
+    color: var(--muted); margin-top: 0.6rem; line-height: 1.55;
+  }
+
+  .eq {
+    margin: 1.4rem 0; padding: 0.85rem 1rem;
+    text-align: center; font-size: 1.12rem; line-height: 1.9;
+    background: var(--paper-raised);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    overflow-x: auto;
+  }
+  .eq em { font-style: italic; }
+  .eq-where { display: inline-block; margin-left: 1.2rem; font-size: 0.9rem; color: var(--muted); }
+  .brk { font-size: 1.5em; vertical-align: middle; }
+  .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 0.15rem; }
+  .frac .num { border-bottom: 1px solid var(--ink); padding: 0 0.35rem 0.1rem; line-height: 1.35; }
+  .frac .den { padding: 0.1rem 0.35rem 0; line-height: 1.35; }
+
+  .proj-foot {
+    margin-top: 3rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--faint);
+    font-family: var(--font-mono); font-size: 0.82rem;
+  }
+  @media (max-width: 34rem) {
+    .proj-meta > div { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+</style>

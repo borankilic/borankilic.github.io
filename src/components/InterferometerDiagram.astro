@@ -1,25 +1,26 @@
 ---
 /*
  * Schematic of Boran's phase interferometer, redrawn from his own sketch
- * (g12Inter_exp_setup.pdf). Top panel: "G12 experiment table" — a fibre
- * Mach-Zehnder. Probe+phaselocking light is split into a signal arm
+ * (g12Inter_exp_setup.pdf). Top panel: "G12 experiment table" — an
+ * all-fibre Mach-Zehnder; every component sits in fibre, end to end.
+ * Probe+phaselocking light is split into a signal arm
  * (POL -> in-fibre AOM -> 99:1 tap -> protection tube -> circulator ->
- * double-pass free-space AOM -> 99:1 -> SiV nanophotonic cavity) and a
- * reference arm (POL -> in-fibre AOM -> adjustable attenuator -> ~46 m
- * fibre spool). The 99:1 tap and the reference arm recombine on a 50:50
- * fibre coupler read out on APD1/APD2; their outputs drive a servo
- * (dashed accent lines, "δφ_AOM") that phase-locks the two
- * in-fibre AOMs. Bottom panel: laser preparation — a Toptica (cavity
- * probe) and a TiSa (lock) laser, each gated by an AOM, are combined and
- * sent through a PM adjustable attenuator up to the top panel's input.
+ * 99:1 -> SiV nanophotonic cavity) and a reference arm (POL -> in-fibre
+ * AOM -> variable delay stage -> adjustable attenuator). The 99:1 tap and
+ * the reference arm recombine on a 50:50 fibre coupler read out on two
+ * photodiodes, PD1/PD2; their outputs drive a servo (dashed accent lines,
+ * "δφ_AOM") that phase-locks the two in-fibre AOMs. Bottom panel: laser
+ * preparation — a Toptica (cavity probe) and a TiSa (lock) laser, each
+ * gated by an AOM, are combined and sent through a PM adjustable
+ * attenuator up to the top panel's input.
  */
 ---
 
 <figure class="interf">
-  <svg viewBox="0 0 840 1100" role="img" aria-label="Schematic of the phase interferometer: a fibre Mach-Zehnder on the G12 experiment table splits probe and phase-locking light into a signal arm (in-fibre AOM, 99:1 tap, protection tube, circulator, double-pass free-space AOM) toward an SiV nanophotonic cavity, and a reference arm (in-fibre AOM, adjustable attenuator, 46 metre fibre spool); the recombined light is read on two APDs whose signal drives a servo that phase-locks the two AOMs. A lower panel shows the laser preparation stage combining a Toptica cavity-probe laser and a TiSa lock laser before the input.">
+  <svg viewBox="0 0 840 1010" role="img" aria-label="Schematic of the phase interferometer: an all-fibre Mach-Zehnder on the G12 experiment table splits probe and phase-locking light into a signal arm (in-fibre AOM, 99:1 tap, protection tube, circulator, 99:1 tap) toward an SiV nanophotonic cavity, and a reference arm (in-fibre AOM, variable delay stage, adjustable attenuator); the recombined light is read on two photodiodes, PD1 and PD2, whose signals drive a servo that phase-locks the two AOMs. A lower panel shows the laser preparation stage combining a Toptica cavity-probe laser and a TiSa lock laser before the input.">
 
     <!-- ============ TOP PANEL: G12 experiment table ============ -->
-    <rect class="panel" x="20" y="20" width="800" height="660" rx="10" />
+    <rect class="panel" x="20" y="20" width="800" height="570" rx="10" />
     <text class="panel-tag" x="40" y="46">G12 experiment table</text>
 
     <!-- phase-lock servo -->
@@ -27,133 +28,135 @@
     <path class="servo-wave" d="M87,90 Q93.5,79 100,90 T113,90" />
     <text class="fblbl" x="100" y="64" text-anchor="middle">&#948;&#966;_AOM</text>
 
-    <!-- feedback: APD1/APD2 -> servo -->
-    <path class="fb" d="M300,240 L70,240 L70,90 L84,90" />
-    <path class="fb" d="M300,350 L58,350 L58,90 L84,90" />
+    <!-- feedback: PD1/PD2 -> servo -->
+    <path class="fb" d="M300,150 L70,150 L70,90 L84,90" />
+    <path class="fb" d="M300,260 L58,260 L58,90 L84,90" />
     <!-- feedback: servo -> reference-arm AOM -->
-    <path class="fb" d="M100,106 L100,130 L86,130 L86,435 L128,435" />
+    <path class="fb" d="M100,106 L100,130 L86,130 L86,345 L128,345" />
     <!-- feedback: servo -> signal-arm AOM -->
-    <path class="fb" d="M116,90 L116,55 L805,55 L805,435 L492,435" />
+    <path class="fb" d="M116,90 L116,55 L805,55 L805,345 L492,345" />
 
     <!-- input: Probe + Phaselocking, fibre splitter BS_in -->
-    <line class="fibre" x1="310" y1="624.8" x2="310" y2="760" />
-    <rect class="bs" x="296" y="591" width="28" height="28" rx="2" transform="rotate(45 310 605)" />
-    <text class="cmp" x="322" y="648">BS</text>
-    <line class="fibre" x1="290.2" y1="605" x2="150" y2="560" />
-    <line class="fibre" x1="329.8" y1="605" x2="470" y2="560" />
+    <line class="fibre" x1="310" y1="534.8" x2="310" y2="670" />
+    <rect class="bs" x="296" y="501" width="28" height="28" rx="2" transform="rotate(45 310 515)" />
+    <text class="cmp" x="322" y="558">BS</text>
+    <line class="fibre" x1="290.2" y1="515" x2="150" y2="470" />
+    <line class="fibre" x1="329.8" y1="515" x2="470" y2="470" />
 
     <!-- ===== reference arm (x = 150) ===== -->
-    <line class="fibre" x1="150" y1="560" x2="150" y2="525" />
-    <circle class="pol" cx="150" cy="520" r="5" /><circle class="pol" cx="150" cy="505" r="5" /><circle class="pol" cx="150" cy="490" r="5" />
-    <line class="fibre" x1="150" y1="485" x2="150" y2="452" />
-    <rect class="box" x="128" y="418" width="44" height="34" rx="3" />
-    <text class="cmp" x="150" y="410" text-anchor="middle">AOM</text>
-    <line class="fibre" x1="150" y1="418" x2="150" y2="380" />
-    <rect class="box atten" x="136" y="360" width="28" height="20" rx="2" />
-    <line class="slash" x1="136" y1="380" x2="164" y2="360" />
-    <text class="cmp" x="172" y="374">atten.</text>
-    <line class="fibre" x1="150" y1="360" x2="150" y2="346" />
-    <!-- ~46 m fibre spool -->
-    <circle class="spool" cx="150" cy="320" r="10" /><circle class="spool" cx="150" cy="320" r="17" /><circle class="spool" cx="150" cy="320" r="24" />
-    <text class="cmp" x="107" y="320" text-anchor="middle" transform="rotate(-90 107 320)">~46 m fibre spool</text>
-    <line class="fibre" x1="150" y1="296" x2="250.2" y2="300" />
+    <line class="fibre" x1="150" y1="470" x2="150" y2="435" />
+    <circle class="pol" cx="150" cy="430" r="5" /><circle class="pol" cx="150" cy="415" r="5" /><circle class="pol" cx="150" cy="400" r="5" />
+    <line class="fibre" x1="150" y1="395" x2="150" y2="362" />
+    <rect class="box" x="128" y="328" width="44" height="34" rx="3" />
+    <text class="cmp" x="180" y="372">AOM</text>
+    <line class="fibre" x1="150" y1="328" x2="150" y2="318" />
+
+    <!-- variable delay stage: carriage on a rail, arrow = travel -->
+    <rect class="box" x="108" y="272" width="84" height="46" rx="3" />
+    <path class="travel" d="M124,285 L176,285 M130,281 L124,285 L130,289 M170,281 L176,285 L170,289" />
+    <line class="rail" x1="118" y1="306" x2="182" y2="306" />
+    <line class="rail" x1="118" y1="300" x2="118" y2="312" />
+    <line class="rail" x1="182" y1="300" x2="182" y2="312" />
+    <rect class="carriage" x="138" y="294" width="24" height="12" rx="1.5" />
+    <text class="cmp" x="200" y="291">delay</text>
+    <text class="cmp" x="200" y="307">stage</text>
+    <line class="fibre" x1="150" y1="272" x2="150" y2="240" />
+
+    <!-- adjustable attenuator -->
+    <rect class="box atten" x="136" y="220" width="28" height="20" rx="2" />
+    <line class="slash" x1="136" y1="240" x2="164" y2="220" />
+    <text class="cmp" x="172" y="234">atten.</text>
+    <line class="fibre" x1="150" y1="220" x2="150" y2="206" />
+    <line class="fibre" x1="150" y1="206" x2="250.2" y2="210" />
 
     <!-- recombination 50:50 coupler -->
-    <rect class="bs" x="256" y="286" width="28" height="28" rx="2" transform="rotate(45 270 300)" />
-    <text class="cmp" x="230" y="278" text-anchor="end">50:50</text>
-    <line class="fibre" x1="289.8" y1="300" x2="300" y2="240" />
-    <line class="fibre" x1="289.8" y1="300" x2="300" y2="350" />
+    <rect class="bs" x="256" y="196" width="28" height="28" rx="2" transform="rotate(45 270 210)" />
+    <text class="cmp" x="230" y="188" text-anchor="end">50:50</text>
+    <line class="fibre" x1="289.8" y1="210" x2="300" y2="150" />
+    <line class="fibre" x1="289.8" y1="210" x2="300" y2="260" />
 
-    <!-- APDs -->
-    <rect class="box" x="300" y="225" width="64" height="30" rx="3" />
-    <text class="cmp" x="332" y="244" text-anchor="middle">APD1</text>
-    <rect class="box" x="300" y="335" width="64" height="30" rx="3" />
-    <text class="cmp" x="332" y="354" text-anchor="middle">APD2</text>
+    <!-- photodiodes -->
+    <rect class="box" x="300" y="135" width="64" height="30" rx="3" />
+    <text class="cmp" x="332" y="154" text-anchor="middle">PD1</text>
+    <rect class="box" x="300" y="245" width="64" height="30" rx="3" />
+    <text class="cmp" x="332" y="264" text-anchor="middle">PD2</text>
 
     <!-- ===== signal arm (x = 470) ===== -->
-    <line class="fibre" x1="470" y1="560" x2="470" y2="525" />
-    <circle class="pol" cx="470" cy="520" r="5" /><circle class="pol" cx="470" cy="505" r="5" /><circle class="pol" cx="470" cy="490" r="5" />
-    <line class="fibre" x1="470" y1="485" x2="470" y2="452" />
-    <rect class="box" x="448" y="418" width="44" height="34" rx="3" />
-    <text class="cmp" x="470" y="466" text-anchor="middle">AOM</text>
-    <line class="fibre" x1="470" y1="418" x2="470" y2="407.56" />
+    <line class="fibre" x1="470" y1="470" x2="470" y2="435" />
+    <circle class="pol" cx="470" cy="430" r="5" /><circle class="pol" cx="470" cy="415" r="5" /><circle class="pol" cx="470" cy="400" r="5" />
+    <line class="fibre" x1="470" y1="395" x2="470" y2="362" />
+    <rect class="box" x="448" y="328" width="44" height="34" rx="3" />
+    <text class="cmp" x="500" y="372">AOM</text>
+    <line class="fibre" x1="470" y1="328" x2="470" y2="317.56" />
 
     <!-- first 99:1 tap: 1% continues to recombination BS, main path up -->
-    <rect class="bs" x="459" y="381" width="22" height="22" rx="2" transform="rotate(45 470 392)" />
-    <text class="cmp" x="492" y="396">99:1</text>
-    <path class="fibre" d="M454.44,392 L430,392 L430,462 L270,462 L270,319.8" />
-    <line class="fibre" x1="470" y1="376.44" x2="470" y2="372" />
+    <rect class="bs" x="459" y="291" width="22" height="22" rx="2" transform="rotate(45 470 302)" />
+    <text class="cmp" x="492" y="306">99:1</text>
+    <path class="fibre" d="M454.44,302 L430,302 L430,372 L270,372 L270,229.8" />
+    <line class="fibre" x1="470" y1="286.44" x2="470" y2="282" />
 
     <!-- protection tube -->
-    <rect class="tube" x="456" y="300" width="28" height="72" rx="2" />
-    <line class="hatch" x1="456" y1="314" x2="484" y2="308" />
-    <line class="hatch" x1="456" y1="330" x2="484" y2="324" />
-    <line class="hatch" x1="456" y1="346" x2="484" y2="340" />
-    <line class="hatch" x1="456" y1="362" x2="484" y2="356" />
-    <text class="cmp" x="498" y="338">Protection Tube</text>
-    <line class="fibre" x1="470" y1="300" x2="470" y2="279" />
+    <rect class="tube" x="456" y="210" width="28" height="72" rx="2" />
+    <line class="hatch" x1="456" y1="224" x2="484" y2="218" />
+    <line class="hatch" x1="456" y1="240" x2="484" y2="234" />
+    <line class="hatch" x1="456" y1="256" x2="484" y2="250" />
+    <line class="hatch" x1="456" y1="272" x2="484" y2="266" />
+    <text class="cmp" x="498" y="248">Protection Tube</text>
+    <line class="fibre" x1="470" y1="210" x2="470" y2="189" />
 
     <!-- circulator -->
-    <circle class="circ" cx="470" cy="265" r="14" />
-    <path class="circ-arrow" d="M463,257 A9,9 0 1 1 463,273" />
-    <text class="cmp" x="492" y="252">circulator</text>
+    <circle class="circ" cx="470" cy="175" r="14" />
+    <path class="circ-arrow" d="M463,167 A9,9 0 1 1 463,183" />
+    <text class="cmp" x="492" y="162">circulator</text>
 
-    <!-- double-pass free-space AOM with 0th-order dump -->
-    <line class="beam" x1="470" y1="251" x2="470" y2="208" />
-    <rect class="box fsbox" x="448" y="176" width="44" height="32" rx="3" />
-    <text class="cmp" x="470" y="168" text-anchor="middle">AOM</text>
-    <path class="beam" d="M470,176 L470,145 L410,145" />
-    <path class="dump" d="M404,138 L416,152" />
-    <text class="beamlbl" x="398" y="133" text-anchor="end">0th</text>
-
-    <!-- circulator -> second 99:1 -> SiV cavity -->
-    <line class="fibre" x1="484" y1="265" x2="579.44" y2="265" />
-    <rect class="bs" x="584" y="254" width="22" height="22" rx="2" transform="rotate(45 595 265)" />
-    <text class="cmp" x="595" y="245" text-anchor="middle">99:1</text>
-    <line class="fibre" x1="610.56" y1="265" x2="640" y2="265" />
-    <rect class="box" x="640" y="240" width="160" height="50" rx="4" />
-    <text class="cmp" x="720" y="260" text-anchor="middle">SiV</text>
-    <text class="cmp" x="720" y="276" text-anchor="middle">nanophotonic cavity</text>
+    <!-- circulator -> second 99:1 -> SiV cavity (all in fibre) -->
+    <line class="fibre" x1="484" y1="175" x2="579.44" y2="175" />
+    <rect class="bs" x="584" y="164" width="22" height="22" rx="2" transform="rotate(45 595 175)" />
+    <text class="cmp" x="595" y="155" text-anchor="middle">99:1</text>
+    <line class="fibre" x1="610.56" y1="175" x2="640" y2="175" />
+    <rect class="box" x="640" y="150" width="160" height="50" rx="4" />
+    <text class="cmp" x="720" y="170" text-anchor="middle">SiV</text>
+    <text class="cmp" x="720" y="186" text-anchor="middle">nanophotonic cavity</text>
 
     <!-- ============ BOTTOM PANEL: laser preparation ============ -->
-    <rect class="panel" x="20" y="740" width="800" height="320" rx="10" />
-    <text class="panel-tag" x="40" y="766">laser preparation</text>
+    <rect class="panel" x="20" y="650" width="800" height="320" rx="10" />
+    <text class="panel-tag" x="40" y="676">laser preparation</text>
 
     <!-- Toptica (cav probe) -->
-    <text class="laser" x="60" y="834">Toptica (cav probe)</text>
-    <line class="fibre" x1="200" y1="830" x2="266" y2="830" />
-    <rect class="bs" x="266" y="816" width="28" height="28" rx="2" transform="rotate(45 280 830)" />
-    <line class="fibre faded" x1="280" y1="849.8" x2="280" y2="888" />
-    <text class="lbl faded" x="285" y="900">other things&#8230;</text>
-    <circle class="pol" cx="325" cy="830" r="5" /><circle class="pol" cx="340" cy="830" r="5" /><circle class="pol" cx="355" cy="830" r="5" />
-    <line class="fibre" x1="299.8" y1="830" x2="318" y2="830" />
-    <line class="fibre" x1="362" y1="830" x2="380" y2="830" />
-    <rect class="box" x="380" y="814" width="44" height="32" rx="3" />
-    <text class="cmp" x="402" y="808" text-anchor="middle">AOM</text>
-    <line class="fibre" x1="424" y1="830" x2="470" y2="870.2" />
+    <text class="laser" x="60" y="744">Toptica (cav probe)</text>
+    <line class="fibre" x1="200" y1="740" x2="266" y2="740" />
+    <rect class="bs" x="266" y="726" width="28" height="28" rx="2" transform="rotate(45 280 740)" />
+    <line class="fibre faded" x1="280" y1="759.8" x2="280" y2="798" />
+    <text class="lbl faded" x="285" y="810">other things&#8230;</text>
+    <circle class="pol" cx="325" cy="740" r="5" /><circle class="pol" cx="340" cy="740" r="5" /><circle class="pol" cx="355" cy="740" r="5" />
+    <line class="fibre" x1="299.8" y1="740" x2="318" y2="740" />
+    <line class="fibre" x1="362" y1="740" x2="380" y2="740" />
+    <rect class="box" x="380" y="724" width="44" height="32" rx="3" />
+    <text class="cmp" x="402" y="718" text-anchor="middle">AOM</text>
+    <line class="fibre" x1="424" y1="740" x2="470" y2="780.2" />
 
     <!-- TiSa (lock) -->
-    <text class="laser" x="60" y="954">TiSa (lock)</text>
-    <line class="fibre" x1="200" y1="950" x2="380" y2="950" />
-    <rect class="box" x="380" y="934" width="44" height="32" rx="3" />
-    <text class="cmp" x="402" y="928" text-anchor="middle">AOM</text>
-    <line class="fibre" x1="424" y1="950" x2="470" y2="909.8" />
+    <text class="laser" x="60" y="864">TiSa (lock)</text>
+    <line class="fibre" x1="200" y1="860" x2="380" y2="860" />
+    <rect class="box" x="380" y="844" width="44" height="32" rx="3" />
+    <text class="cmp" x="402" y="838" text-anchor="middle">AOM</text>
+    <line class="fibre" x1="424" y1="860" x2="470" y2="819.8" />
 
     <!-- combiner -->
-    <rect class="bs" x="456" y="876" width="28" height="28" rx="2" transform="rotate(45 470 890)" />
-    <line class="fibre" x1="489.8" y1="890" x2="510" y2="890" />
-    <circle class="pol" cx="525" cy="890" r="5" /><circle class="pol" cx="540" cy="890" r="5" /><circle class="pol" cx="555" cy="890" r="5" />
-    <line class="fibre" x1="560" y1="890" x2="580" y2="890" />
+    <rect class="bs" x="456" y="786" width="28" height="28" rx="2" transform="rotate(45 470 800)" />
+    <line class="fibre" x1="489.8" y1="800" x2="510" y2="800" />
+    <circle class="pol" cx="525" cy="800" r="5" /><circle class="pol" cx="540" cy="800" r="5" /><circle class="pol" cx="555" cy="800" r="5" />
+    <line class="fibre" x1="560" y1="800" x2="580" y2="800" />
 
     <!-- PM adjustable attenuator -->
-    <rect class="box atten" x="580" y="874" width="50" height="32" rx="3" />
-    <line class="slash" x1="580" y1="906" x2="630" y2="874" />
-    <text class="cmp" x="605" y="856" text-anchor="middle">PM adjustable</text>
-    <text class="cmp" x="605" y="868" text-anchor="middle">attenuator</text>
+    <rect class="box atten" x="580" y="784" width="50" height="32" rx="3" />
+    <line class="slash" x1="580" y1="816" x2="630" y2="784" />
+    <text class="cmp" x="605" y="766" text-anchor="middle">PM adjustable</text>
+    <text class="cmp" x="605" y="778" text-anchor="middle">attenuator</text>
 
     <!-- up to G12 table input -->
-    <path class="fibre" d="M630,890 L630,760 L310,760" />
-    <text class="lbl" x="325" y="712">Probe + Phaselocking</text>
+    <path class="fibre" d="M630,800 L630,670 L310,670" />
+    <text class="lbl" x="325" y="622">Probe + Phaselocking</text>
   </svg>
 </figure>
 
@@ -167,24 +170,22 @@
   }
   .fibre { stroke: var(--ink); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .fibre.faded { opacity: 0.5; }
-  .beam { stroke: #c0392b; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .box { fill: var(--paper-raised); stroke: var(--ink); stroke-width: 1.5; }
-  .fsbox { stroke: #c0392b; }
   .bs { fill: var(--accent-wash); stroke: var(--accent); stroke-width: 1.6; }
   .pol { fill: none; stroke: var(--ink); stroke-width: 1.4; }
-  .spool { fill: none; stroke: var(--muted); stroke-width: 1.2; }
+  .rail { stroke: var(--muted); stroke-width: 1.4; stroke-linecap: round; }
+  .carriage { fill: var(--accent-wash); stroke: var(--accent); stroke-width: 1.5; }
+  .travel { fill: none; stroke: var(--muted); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
   .atten { fill: var(--paper-raised); }
   .slash { stroke: var(--ink); stroke-width: 1.4; }
   .tube { fill: var(--accent-wash); stroke: var(--ink); stroke-width: 1.5; }
   .hatch { stroke: var(--accent-deep); stroke-width: 1; opacity: 0.6; }
   .circ { fill: none; stroke: var(--ink); stroke-width: 1.6; }
   .circ-arrow { fill: none; stroke: var(--ink); stroke-width: 1.4; }
-  .dump { stroke: #c0392b; stroke-width: 2; }
   .servo { fill: var(--accent-wash); stroke: var(--accent); stroke-width: 1.6; }
   .servo-wave { fill: none; stroke: var(--accent); stroke-width: 1.6; }
   .fb { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-dasharray: 5 4; }
   .cmp { font-family: var(--font-mono); font-size: 13px; fill: var(--ink); }
-  .beamlbl { font-family: var(--font-mono); font-size: 13px; fill: #c0392b; }
   .fblbl { font-family: var(--font-mono); font-size: 13px; fill: var(--accent-deep); }
   .lbl { font-family: var(--font-body); font-size: 15px; font-style: italic; fill: var(--ink-soft); }
   .lbl.faded { opacity: 0.55; }

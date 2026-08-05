@@ -1,0 +1,191 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CriticalityDivider from '../../components/CriticalityDivider.astro';
+import synMriPipeline from '../../assets/research/synthetic_mri_pipeline.png';
+import synMriResults from '../../assets/research/synthetic_mri_results.png';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base
+  title="Synthetic MRI"
+  description="A pipeline that synthesises physics-consistent MR images and raw multi-coil k-space from quantitative multi-parameter maps, for building training and benchmarking datasets."
+>
+  <article class="shell">
+    <p class="back"><a href={base + '/research'}>← Research</a></p>
+
+    <header class="proj-head">
+      <p class="eyebrow">2025 · Max Planck Institute for Human Cognitive and Brain Sciences</p>
+      <h1>Synthetic Image and Multi-Coil K-space Generation From Multi-Parameter Maps</h1>
+      <p class="proj-blurb">
+        Deep-learning reconstruction needs large, diverse raw MRI datasets that are slow and
+        expensive to acquire. This pipeline generates them from an analytic signal model —
+        physics-consistent images <em>and</em> the multi-coil k-space behind them, with ground
+        truth tailored to the sequence, coil sensitivities, and noise.
+      </p>
+
+      <dl class="proj-meta">
+        <div><dt>Role</dt><dd>Research intern · with K. Pine and N. Weiskopf</dd></div>
+        <div>
+          <dt>Topics</dt>
+          <dd class="tags">
+            <span class="tag">quantitative MRI</span>
+            <span class="tag">k-space simulation</span>
+            <span class="tag">coil sensitivities</span>
+            <span class="tag">signal modelling</span>
+          </dd>
+        </div>
+        <div>
+          <dt>Materials</dt>
+          <dd class="links">
+            <a href="https://echo.ismrm.org/conferences/ISMRM2026/digital-poster/13628" target="_blank" rel="noopener">ISMRM 2026 poster ↗</a>
+            <a href="https://github.com/borankilic/synthetic_mri" target="_blank" rel="noopener">Code (GitHub) ↗</a>
+          </dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="prose">
+      <h2>The idea</h2>
+      <p>
+        Quantitative multi-parameter mapping (MPM) measures tissue properties — longitudinal
+        and effective transverse relaxation rates <em>R</em><sub>1</sub>,
+        <em>R</em><sub>2</sub><sup>*</sup>, and proton density — that are independent of the
+        sequence used to read them. Given those maps, the signal any sequence <em>would</em>
+        produce can be computed forward. For a spoiled gradient echo, for instance, the
+        signal follows the familiar FLASH expression
+      </p>
+
+      <div class="eq">
+        <em>S</em> ∝ PD · sin<em>α</em> ·
+        <span class="frac"><span class="num">1 − <em>e</em><sup>−<em>TR·R</em><sub>1</sub></sup></span><span class="den">1 − cos<em>α</em> · <em>e</em><sup>−<em>TR·R</em><sub>1</sub></sup></span></span>
+        · <em>e</em><sup>−<em>TE·R</em><sub>2</sub><sup>*</sup></sup>
+      </div>
+
+      <p>
+        so sweeping TR, TE, and flip angle generates arbitrary contrasts from one acquisition.
+        The harder — and more useful — part is going all the way to <em>raw</em> data:
+        reintroducing the transmit-field inhomogeneity <em>B</em><sub>1</sub><sup>+</sup>,
+        applying per-coil sensitivity maps, accruing the TE-dependent phase from the off-resonance
+        field Δ<em>B</em><sub>0</sub>, and adding correlated noise before the Fourier transform.
+      </p>
+
+      <figure class="fig">
+        <Image src={synMriPipeline} alt="Pipeline schematic: multi-parameter maps plus B1, B0, sensitivity, and noise data feeding synthetic image and multi-coil k-space generation." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          The pipeline. Multi-parameter maps plus measured B₁⁺, ΔB₀, coil-sensitivity and noise
+          data produce per-coil complex images and matching k-space, with adjustable
+          TR / TE / FA / TI and sampling pattern.
+        </figcaption>
+      </figure>
+
+      <CriticalityDivider label="results" />
+
+      <h2>What comes out</h2>
+      <p>
+        Flip angles are modulated voxelwise by the coregistered
+        <em>B</em><sub>1</sub><sup>+</sup> map so the nominal angle reflects the real one;
+        sensitivity maps are estimated with ESPIRiT and lightly smoothed to reduce calibration
+        noise while preserving coil structure; and multi-echo phase is unwrapped with ROMEO
+        before linear estimation of Δ<em>B</em><sub>0</sub>. Synthesised FLASH, FSE, FLAIR, and
+        MP2RAGE contrasts reproduce expected tissue contrast across parameter sweeps, and the
+        resulting per-coil k-space matches the spatial-frequency content and coil modulation of
+        measured acquisitions.
+      </p>
+
+      <figure class="fig">
+        <Image src={synMriResults} alt="Grid of synthetic MR contrasts — FLASH, FLAIR, FSE, MP2RAGE — with example per-coil images and their k-spaces." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Original MPMs (left) are the inputs; the remaining columns show synthesised FLASH,
+          FLAIR, FSE and MP2RAGE contrasts, example per-coil images, and their corresponding
+          k-spaces — all generated from the same maps.
+        </figcaption>
+      </figure>
+
+      <p>
+        Synthesised k-spaces survive a round trip: reconstructed and fed back through a
+        quantitative fitting pipeline, they recover multi-parameter maps approximating the
+        originals, demonstrating bidirectional consistency. Undersampled data reconstructed with
+        LORAKS remain visually and structurally close to fully sampled reference images, which is
+        what makes the framework usable for benchmarking reconstruction algorithms.
+      </p>
+
+      <h2>Honest limits</h2>
+      <p>
+        The realism is bounded by the input maps and calibration quality. Imperfect
+        <em>B</em><sub>1</sub><sup>+</sup> estimation produces flip-angle bias; errors in MPM
+        fitting or coregistration propagate through; the noise model can underestimate inter-coil
+        correlations; and the linear Δ<em>B</em><sub>0</sub> phase approximation fails in strongly
+        off-resonant or multi-echo regimes. Physical effects outside the model — intravoxel
+        dephasing, eddy currents, flow, motion — are simply absent. The framework is a practical
+        baseline to prototype on and extend, not a substitute for a full Bloch simulator.
+      </p>
+    </div>
+
+    <footer class="proj-foot">
+      <a href={base + '/research'}>← Back to research</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .shell { max-width: 44rem; }
+  .back { font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .back a, .proj-foot a { color: var(--muted); }
+  .back a:hover, .proj-foot a:hover { color: var(--accent); }
+
+  .proj-head { margin-bottom: 2rem; }
+  .proj-head h1 { margin: 0.15em 0 0.35em; font-size: var(--step-3); line-height: 1.12; }
+  .proj-blurb { font-size: 1.18rem; line-height: 1.55; color: var(--ink-soft); max-width: 40rem; }
+  .proj-meta {
+    margin: 1.8rem 0 0; display: grid; gap: 0.9rem;
+    padding: 1.2rem 0 0; border-top: 1px solid var(--faint);
+  }
+  .proj-meta > div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; align-items: baseline; }
+  .proj-meta dt {
+    font-family: var(--font-mono); font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+  .proj-meta dd { margin: 0; color: var(--ink-soft); }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; }
+  .tag {
+    font-family: var(--font-mono); font-size: 0.74rem;
+    color: var(--accent-deep); background: var(--accent-wash);
+    padding: 0.15rem 0.5rem; border-radius: 3px;
+  }
+  .links { display: flex; flex-direction: column; gap: 0.3rem; align-items: start; }
+  .links a { font-family: var(--font-mono); font-size: 0.86rem; }
+
+  .fig { margin: 2rem 0; }
+  .fig :global(img) {
+    display: block; width: 100%;
+    border: 1px solid var(--faint); border-radius: 4px; background: #fff;
+  }
+  .fig figcaption {
+    font-family: var(--font-mono); font-size: var(--step--1);
+    color: var(--muted); margin-top: 0.6rem; line-height: 1.55;
+  }
+
+  .eq {
+    margin: 1.4rem 0; padding: 0.85rem 1rem;
+    text-align: center; font-size: 1.12rem; line-height: 1.9;
+    background: var(--paper-raised);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    overflow-x: auto;
+  }
+  .eq em { font-style: italic; }
+  .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 0.15rem; }
+  .frac .num { border-bottom: 1px solid var(--ink); padding: 0 0.35rem 0.1rem; line-height: 1.35; }
+  .frac .den { padding: 0.1rem 0.35rem 0; line-height: 1.35; }
+
+  .proj-foot {
+    margin-top: 3rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--faint);
+    font-family: var(--font-mono); font-size: 0.82rem;
+  }
+  @media (max-width: 34rem) {
+    .proj-meta > div { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+</style>
