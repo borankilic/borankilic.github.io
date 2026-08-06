@@ -3,7 +3,14 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CriticalityDivider from '../../components/CriticalityDivider.astro';
 import nvSetup from '../../assets/research/nv_setup.png';
-import odmr from '../../assets/projects/nv-center-magnetometry/odmr.png';
+import hyperfine from '../../assets/research/nv/hyperfine_odmr.png';
+import rawPl from '../../assets/research/nv/raw_pl_dc_removed.png';
+import envelopeComparison from '../../assets/research/nv/envelope_comparison.png';
+import quadratureEnvelope from '../../assets/research/nv/quadrature_envelope.png';
+import lockinSweep from '../../assets/research/nv/lia_dispersive_sweep.png';
+import sensFftShort from '../../assets/research/nv/sensitivity_fft_tc_short.png';
+import sensFftMid from '../../assets/research/nv/sensitivity_fft_tc_mid.png';
+import sensFftLong from '../../assets/research/nv/sensitivity_fft_tc_long.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
@@ -74,11 +81,29 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <p>
-        where <em>B</em><sub>∥</sub> is the field projected on the NV symmetry axis. The
-        hyperfine term splits each resonance further into three lines separated by
-        <em>A</em><sub>∥</sub> ≈ 2.16 MHz. Green 532 nm light both polarises the spin into
-        <em>m</em><sub>s</sub> = 0 and reads it out: when a swept microwave tone hits a
-        transition, population leaves the bright state and the photoluminescence drops.
+        where <em>B</em><sub>∥</sub> is the field projected on the NV symmetry axis — this is the
+        quantity the whole instrument is built to extract. The hyperfine term splits each
+        resonance further into three lines separated by <em>A</em><sub>∥</sub> ≈ 2.16 MHz, one
+        for each projection of the <sup>14</sup>N nuclear spin, <em>m</em><sub>I</sub> = −1, 0,
+        +1. Green 532 nm light both polarises the spin into <em>m</em><sub>s</sub> = 0 and reads
+        it out through spin-dependent intersystem crossing: when a swept microwave tone hits a
+        transition, population leaves the bright <em>m</em><sub>s</sub> = 0 state and the
+        637–800 nm photoluminescence drops.
+      </p>
+
+      <h2>The instrument</h2>
+      <p>
+        The optical path is a 532 nm CW laser split at a beam splitter, with one arm sent to a
+        monitor photodiode for intensity referencing and the other focused onto the diamond
+        through a 10.6 mm focal-length aspheric lens. The same lens collects the returned
+        fluorescence, which a dichroic mirror separates from the excitation path and a long-pass
+        filter cleans of residual 532 nm scatter before it lands on two Thorlabs PDA100A-EC
+        photodetectors. On the microwave side, an Anritsu MG3692C generator supplies the drive
+        tone, a Mini-Circuits ZRL-3500+ amplifier brings it to useful power, and a loop antenna
+        placed near the diamond couples it into the sample. A pair of Helmholtz coils provides
+        controlled bias and test fields. Demodulation runs on a Stanford Research SR860 lock-in
+        amplifier referenced to the microwave modulation, and both the raw photodetector signal
+        and the lock-in output are digitized on a TiePie Handyscope HS5.
       </p>
 
       <figure class="fig">
@@ -86,18 +111,105 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <figcaption>
           The instrument. <strong>Optical:</strong> a 532 nm pump focused by a 10.6 mm aspheric
           lens; fluorescence in the 637–800 nm band is collected by the same lens, separated by
-          a dichroic, cleaned by a long-pass filter and detected on two photodiodes.
-          <strong>Electronic:</strong> a microwave source, square-wave frequency modulated and
-          amplified into a loop antenna, with Helmholtz coils for field control and a lock-in
-          amplifier referenced to the modulation.
+          a dichroic, cleaned by a long-pass filter and detected on two PDA100A-EC photodiodes.
+          <strong>Electronic:</strong> an MG3692C microwave source, amplified by a ZRL-3500+ into
+          a loop antenna, with Helmholtz coils for field control and an SR860 lock-in amplifier
+          referenced to the modulation, logged on a Handyscope HS5.
+        </figcaption>
+      </figure>
+
+      <h2>Resolving the hyperfine structure</h2>
+      <p>
+        Diamond's host lattice gives NV centers four possible orientations, one along each of
+        the four ⟨111⟩ crystallographic axes. An arbitrarily directed bias field projects
+        differently onto each axis, so an ensemble containing all four orientations shows four
+        Zeeman-split pairs, not one, each shifted by its own <em>B</em><sub>∥</sub>. Under a strong
+        bias field from a stack of neodymium magnets, this is exactly what the spectrum resolves:
+        four distinct groups, each split again into three lines by the 2.16 MHz <sup>14</sup>N
+        hyperfine coupling, for twelve lines total. Because each orientation's
+        <em>m</em><sub>s</sub> = ±1 levels are already split symmetrically about <em>D</em>, the
+        whole pattern is symmetric about ≈2.874 GHz.
+      </p>
+
+      <p>
+        This spectrum is a useful diagnostic in its own right: the four splittings encode the
+        bias field's direction relative to the diamond lattice, and resolving all twelve lines
+        confirms both adequate microwave coupling bandwidth and narrow enough linewidths across
+        the span. It is also the calibration step for everything that follows — operating the
+        magnetometer means picking one line and working the lock-in scheme around it, so knowing
+        exactly where the twelve lines sit under a given bias is a prerequisite, not a side
+        measurement.
+      </p>
+
+      <figure class="fig">
+        <Image src={hyperfine} alt="Panels (a) and (b) show the NV crystallographic axes relative to the applied bias field B0; panel (c) shows the lock-in signal in microvolts versus microwave frequency from about 2.82 to 2.92 GHz, resolving four groups of three hyperfine lines each." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          (a, b) The four NV symmetry axes relative to the applied bias field <em>B</em><sub>0</sub>,
+          each seeing a different projection and hence a different Zeeman shift. (c) Lock-in
+          signal versus microwave frequency, 2.82–2.92 GHz: four groups of three hyperfine lines,
+          symmetric about ≈2.874 GHz.
+        </figcaption>
+      </figure>
+
+      <h2>Getting a usable signal out of noise</h2>
+      <p>
+        Before demodulation is trusted to do the heavy lifting, it is worth looking at what the
+        raw photodetector signal looks like: a slowly drifting DC level from laser intensity
+        fluctuations, beam alignment, and thermal drift, with the ODMR information riding on top
+        as a much smaller AC-coupled feature. Fitting a Lorentzian directly to the raw trace is
+        fragile for exactly this reason — the fit competes against drift that is often comparable
+        in size to the signal itself.
+      </p>
+
+      <p>
+        Removing the DC component isolates the AC content, but the result is still noisy enough
+        that its envelope — the quantity that actually carries the resonance shape — needs
+        careful recovery. I compared five approaches on the same records: moving-average and
+        low-pass filtering, upper-envelope detection, peak detection, an exponential follower,
+        and a quadrature (Hilbert-transform-like) envelope that reconstructs the analytic signal
+        and takes its magnitude. The quadrature envelope recovered the peak structure most
+        faithfully — it does not lag like a causal exponential follower, and it does not depend
+        on locating discrete peaks, so it degrades gracefully as contrast drops. Separately,
+        reconstructing the spectrum from only the above-threshold components of its Fourier
+        transform suppresses narrowband electromagnetic interference from nearby lab electronics
+        without touching the broadband resonance feature.
+      </p>
+
+      <figure class="fig">
+        <Image src={rawPl} alt="Raw photodetector time trace showing a DC offset, and the same trace with the DC component removed." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Raw photoluminescence time trace (top) dominated by a slowly drifting DC offset from
+          laser intensity and alignment drift, and the same trace with the DC component removed
+          (bottom), isolating the AC content that carries the resonance information.
+        </figcaption>
+      </figure>
+
+      <figure class="fig">
+        <Image src={envelopeComparison} alt="Comparison of envelope-recovery methods — moving average, upper envelope, peak detection, exponential follower, and quadrature envelope — applied to the same noisy record." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Five envelope-recovery methods on the same noisy record: moving average, upper
+          envelope, peak detection, exponential follower, and the quadrature envelope. The
+          quadrature method tracks the true peak structure most closely without lagging or
+          relying on discrete peak identification.
+        </figcaption>
+      </figure>
+
+      <figure class="fig">
+        <Image src={quadratureEnvelope} alt="The quadrature envelope overlaid on the raw AC signal, showing it closely follows the underlying resonance shape." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          The quadrature envelope (bold) overlaid on the raw AC signal it was extracted from —
+          the method used downstream wherever an envelope, rather than the raw oscillation, is
+          the quantity of interest.
         </figcaption>
       </figure>
 
       <CriticalityDivider label="lock-in readout" />
 
-      <h2>Why modulate</h2>
+      <h2>Lock-in detection</h2>
       <p>
-        A single ODMR feature is a Lorentzian dip on a bright background,
+        Sweeping the microwave frequency and fitting the resulting dip is still too slow for
+        real-time field tracking, and the dip sits on the same drifting background discussed
+        above. A single ODMR feature is
       </p>
 
       <div class="eq">
@@ -108,10 +220,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <p>
-        with contrast <em>C</em> and FWHM <em>ν</em> ≈ 18.3 MHz for our ensemble. Reading this
-        dip directly means fitting a resonance sitting on top of laser-intensity drift and
-        1/<em>f</em> noise — unstable in practice. Instead the carrier is square-wave frequency
-        modulated,
+        with contrast <em>C</em> and FWHM <em>ν</em> ≈ 18.3 MHz for our ensemble. Instead of
+        sweeping and fitting, the carrier is square-wave frequency modulated,
       </p>
 
       <div class="eq">
@@ -121,15 +231,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <p>
-        which moves the measurement band far above the 1/<em>f</em> corner. Demodulating at
-        <em>f</em><sub>mod</sub> returns the <em>difference</em> of the lineshape sampled at
-        <em>ω</em><sub>C</sub> ± <em>ω</em><sub>dev</sub> — a dispersive, derivative-like curve
-        that crosses zero exactly at <em>ω</em><sub>C</sub> = <em>ω</em><sub>0</sub>.
-      </p>
-
-      <p>
-        Sensitivity is set by the slope at that zero crossing, and differentiating the
-        demodulated lineshape shows the slope is steepest at a specific modulation depth:
+        which moves the measurement band far above the 1/<em>f</em> corner set by laser and
+        thermal drift. Demodulating at <em>f</em><sub>mod</sub> returns the <em>difference</em>
+        of the lineshape sampled at <em>ω</em><sub>C</sub> ± <em>ω</em><sub>dev</sub> — a
+        dispersive curve that crosses zero exactly at <em>ω</em><sub>C</sub> = <em>ω</em><sub>0</sub>.
+        Hold the carrier there and any applied field shifts <em>ω</em><sub>0</sub>, which shows up
+        as a lock-in output proportional to the field, with no fitting required. Sensitivity is
+        set by the slope at that zero crossing, and differentiating the demodulated lineshape
+        with respect to <em>ω</em><sub>dev</sub> shows the slope is steepest at a specific
+        modulation depth:
       </p>
 
       <div class="eq">
@@ -137,30 +247,36 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <p>
-        Operated there, the lock-in output is linear in applied field over the useful range,
-        and the inverse of the measured slope is the voltage-to-field conversion factor —
-        calibrated against a fluxgate reference to
+        Operated there, the lock-in output is linear in applied field over the useful range
+        spanning roughly the linewidth around <em>ω</em><sub>0</sub>. Sweeping the carrier
+        through resonance and recording the lock-in output directly gives that dispersive curve;
+        a linear fit through its zero crossing gives the slope, and its inverse — calibrated
+        against a fluxgate reference — is the voltage-to-field conversion factor
       </p>
 
       <div class="eq">
         <em>κ</em> = <em>γ</em><sub><em>B</em></sub><sup>−1</sup> = 36 µT/V
       </div>
 
+      <p>
+        From here the magnetometer's output is simply <em>κ</em> times the lock-in voltage — no
+        further spectroscopy needed until the carrier drifts out of the linear region.
+      </p>
+
       <figure class="fig">
-        <Image src={odmr} alt="Raw noisy ODMR sweep beside the reconstructed spectrum showing the characteristic double-dip resonance after denoising." widths={[600, 1000, 1139]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={lockinSweep} alt="Lock-in ODMR spectrum from a frequency sweep: the dispersive lineshape with smoothed data and a linear fit through the zero crossing." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
-          Raw photodetector sweep (left) and the reconstruction retaining only above-threshold
-          frequency components (right). Before lock-in detection was in place, recovering the
-          resonance from the raw trace required moving-average, low-pass and FFT-threshold
-          filtering — which is precisely the fragility the modulated scheme removes.
+          Lock-in output versus carrier frequency across a single resonance: the dispersive
+          curve (smoothed) with a linear fit through its zero crossing. The fitted slope, via
+          the fluxgate calibration, sets <em>κ</em> = 36 µT/V.
         </figcaption>
       </figure>
 
-      <h2>Sensitivity</h2>
+      <h2>Sensitivity and the bandwidth trade-off</h2>
       <p>
         With no test field applied, the lock-in X-channel trace is converted to field units,
         <em>B</em><sub>meas</sub>(<em>t</em>) = <em>κ V</em><sub>LIA</sub>(<em>t</em>), and the
-        sensitivity over a trial of duration <em>T</em> follows the standard definition
+        sensitivity follows the standard definition
       </p>
 
       <div class="eq">
@@ -169,25 +285,77 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <p>
         where <em>f</em><sub>ENBW</sub> is the equivalent noise bandwidth of the lock-in
-        low-pass filter. Equivalently, the FFT of
-        <em>B</em><sub>meas</sub>(<em>t</em>) resolves the noise floor per unit bandwidth.
-        With a 3 ms time constant this gives roughly <strong>100 nT/√Hz in the 10–100 Hz
-        band</strong> — limited by low-frequency technical noise — improving to about
-        <strong>10 nT/√Hz above 200 Hz</strong>. The time constant trades bandwidth against
-        smoothing: longer constants lower the cutoff and quieten the output at the cost of
-        temporal resolution.
+        low-pass filter. Equivalently, the FFT of <em>B</em><sub>meas</sub>(<em>t</em>) gives the
+        noise floor as a function of frequency directly, and it is instructive to look at that
+        floor at several time constants rather than quote a single number. At a short time
+        constant the cutoff is high and the floor only rolls off around 1–2 kHz; at an
+        intermediate constant the roll-off moves down to roughly 200 Hz; at a long constant it
+        moves down further, to around 20 Hz. In every case the floor below the roll-off is set
+        by the same low-frequency technical noise — laser intensity fluctuations and slow
+        thermal drift — that the modulation scheme was designed to move away from, and narrowing
+        the lock-in bandwidth does not remove that noise, only excludes more of the higher band
+        where it is already smaller.
       </p>
 
-      <h2>Where it goes next</h2>
-      <ul>
-        <li><strong>Balanced detection</strong> to reject common-mode laser intensity noise, which currently dominates the low-frequency floor.</li>
-        <li><strong>Hyperfine-driven multi-tone excitation</strong> — driving all three <sup>14</sup>N hyperfine lines at once to recover contrast lost to the splitting.</li>
-        <li><strong>Closed-loop (PI) tracking</strong> of the zero crossing, which extends the dynamic range beyond the linear span of a fixed-carrier measurement.</li>
-      </ul>
+      <p>
+        With a 3 ms time constant the measured sensitivity is roughly
+        <strong>100 nT/√Hz in the 10–100 Hz band</strong>, improving to about
+        <strong>10 nT/√Hz above 200 Hz</strong> where the technical noise has mostly rolled off.
+        The time constant is therefore a genuine trade-off, not a free parameter: a longer
+        constant quiets the output but cuts bandwidth, directly limiting how fast a real field
+        change can be tracked.
+      </p>
+
+      <figure class="fig">
+        <Image src={sensFftShort} alt="Log-log plot of sensitivity in nT per root Hz versus frequency at a short lock-in time constant, with the noise floor rolling off around 1-2 kHz." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Sensitivity spectrum at a short lock-in time constant: wide bandwidth, roll-off near
+          1–2 kHz.
+        </figcaption>
+      </figure>
+
+      <figure class="fig">
+        <Image src={sensFftMid} alt="Log-log plot of sensitivity in nT per root Hz versus frequency at an intermediate lock-in time constant, with the noise floor rolling off around 200 Hz." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Same measurement at an intermediate time constant: the roll-off moves down to roughly
+          200 Hz as the low-pass narrows.
+        </figcaption>
+      </figure>
+
+      <figure class="fig">
+        <Image src={sensFftLong} alt="Log-log plot of sensitivity in nT per root Hz versus frequency at a long lock-in time constant, with the noise floor rolling off around 20 Hz." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          At a long time constant the roll-off moves down further, to near 20 Hz — the
+          bandwidth/noise trade-off set entirely by the lock-in filter.
+        </figcaption>
+      </figure>
+
+      <h2>Conclusions</h2>
+      <p>
+        The instrument does what it was built to do: a swept spectrum resolves all twelve
+        hyperfine lines from the four NV orientations, confirming the spin physics and giving a
+        clean calibration point, and the square-wave-modulated lock-in scheme turns that
+        spectroscopy into a continuous, linear field readout with a measured 36 µT/V conversion
+        and a sensitivity of order 100 nT/√Hz at low frequency, improving toward 10 nT/√Hz above
+        a few hundred hertz. The dominant limitation right now is not the spin physics or the
+        detection electronics — it is technical noise entering through the optical path, chiefly
+        laser intensity fluctuations and slow thermal drift, which sets the floor at low
+        frequency regardless of how the lock-in time constant is tuned.
+      </p>
 
       <p>
-        A related application of this platform — detecting magnetic anomalies with NV
-        ensembles — was presented as a poster at <strong>KOBIT 2025</strong>.
+        The most direct fix is <strong>balanced detection</strong>: splitting the collected
+        fluorescence onto two photodiodes and subtracting, so laser-intensity noise common to
+        both arms cancels while the differential ODMR signal survives. Separately, since the
+        <sup>14</sup>N hyperfine splitting divides the available contrast across three lines
+        instead of concentrating it in one, <strong>hyperfine-driven multi-tone excitation</strong> —
+        driving all three at once — should recover contrast the current single-tone scheme
+        discards. And because the linear range around the zero crossing is set by the resonance
+        linewidth, <strong>closed-loop PI tracking</strong> of that crossing would let the carrier
+        follow the resonance rather than sit at a fixed point, extending the dynamic range well
+        beyond a static carrier. An application of this platform — NV-ensemble magnetic anomaly
+        detection — was presented as a poster at <strong>KOBIT 2025</strong>, and is the more
+        immediate motivation for pushing sensitivity and dynamic range further.
       </p>
     </div>
 

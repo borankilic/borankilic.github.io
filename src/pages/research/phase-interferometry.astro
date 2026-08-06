@@ -3,14 +3,26 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CriticalityDivider from '../../components/CriticalityDivider.astro';
 import InterferometerDiagram from '../../components/InterferometerDiagram.astro';
-import phaseResponse from '../../assets/research/cavity_phase_response.png';
+import cavityResponse from '../../assets/research/interferometry/cavity_response.png';
+import mziTransfer from '../../assets/research/interferometry/mzi_transfer.png';
+import fringesComplementary from '../../assets/research/interferometry/lab/fringes_complementary.png';
+import armImbalance from '../../assets/research/interferometry/lab/arm_imbalance.png';
+import aomDelayPositive from '../../assets/research/interferometry/lab/aom_delay_positive.png';
+import aomDelayNegative from '../../assets/research/interferometry/lab/aom_delay_negative.png';
+import countDrift from '../../assets/research/interferometry/lab/count_drift.png';
+import lockInjectionTimeline from '../../assets/research/interferometry/lab/lock_injection_timeline.png';
+import lockPerformance from '../../assets/research/interferometry/lab/lock_performance.png';
+import phaseLinearity from '../../assets/research/interferometry/lab/phase_linearity.png';
+import phaseLinearityDifferential from '../../assets/research/interferometry/lab/phase_linearity_differential.png';
+import cavityReflectionDip from '../../assets/research/interferometry/lab/cavity_reflection_dip.png';
+import fiberCouplingMicrograph from '../../assets/research/interferometry/lab/fiber_coupling_micrograph.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <Base
   title="Phase interferometry for nanophotonic cavities"
-  description="A fibre Mach–Zehnder interferometer that measures the reflection phase of a nanophotonic cavity at room temperature, resolving the over- versus under-coupled regime that reflected intensity alone cannot distinguish."
+  description="A room-temperature, all-fibre Mach–Zehnder interferometer I built and locked to read out the reflection phase of a nanophotonic cavity, resolving the over- versus under-coupled degeneracy that reflected intensity alone cannot."
 >
   <article class="shell">
     <p class="back"><a href={base + '/research'}>← Research</a></p>
@@ -19,10 +31,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p class="eyebrow">2026 · Lukin group, Harvard</p>
       <h1>Phase Interferometry for Room-Temperature Characterization of Nanophotonic Cavities</h1>
       <p class="proj-blurb">
-        The reflected <em>intensity</em> of a single-sided cavity cannot tell you whether it is
-        over- or under-coupled — both regimes produce the same dip. The reflected
-        <em>phase</em> can. This is a fibre Mach–Zehnder interferometer built to measure that
-        phase on the bench, at room temperature, before a device is committed to a cryostat.
+        A cavity's reflected <em>intensity</em> cannot tell you whether it is over- or
+        under-coupled — both regimes produce the same dip. The reflected <em>phase</em> can.
+        I built an all-fibre Mach–Zehnder interferometer to read that phase out on the bench,
+        at room temperature, phase-locked it against acoustic and thermal drift with two AOMs
+        and a Red Pitaya servo, and validated the readout to sub-degree precision by injecting
+        a known phase and measuring it back.
       </p>
 
       <dl class="proj-meta">
@@ -32,9 +46,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <dd class="tags">
             <span class="tag">fibre interferometry</span>
             <span class="tag">cavity QED</span>
-            <span class="tag">heterodyne detection</span>
             <span class="tag">AOM phase locking</span>
-            <span class="tag">instrument control</span>
+            <span class="tag">Red Pitaya servo</span>
+            <span class="tag">nanophotonics</span>
           </dd>
         </div>
       </dl>
@@ -69,30 +83,52 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         gives <em>r</em><sub>c</sub> &lt; 0; an <strong>under-coupled</strong> one gives
         <em>r</em><sub>c</sub> &gt; 0. Because a detector measures
         |<em>r</em><sub>c</sub>|<sup>2</sup>, that sign is invisible: a cavity with
-        <em>κ</em><sub>ext</sub>/<em>κ</em> = 0.8 and one with 0.2 produce
-        <em>identical</em> reflection dips. The phase does not hide it. Sweeping across
-        resonance, an over-coupled cavity winds <em>φ</em><sub>c</sub> by a full 2π, while an
-        under-coupled cavity makes a small excursion that returns to where it started.
+        <em>κ</em><sub>ext</sub>/<em>κ</em> = 0.8 and one with 0.2 produce identical reflection
+        dips. Phase does not hide it — sweeping across resonance, an over-coupled cavity winds
+        <em>φ</em><sub>c</sub> by a full 2π, while an under-coupled cavity makes a small
+        excursion and returns to where it started. Resolving that winding, at room temperature,
+        before a device is committed to a cryostat, is what this interferometer is for.
       </p>
 
       <figure class="fig">
-        <Image src={phaseResponse} alt="Two-panel plot: reflected intensity versus detuning, where over- and under-coupled cavities overlap exactly; and reflection phase versus detuning, where the over-coupled case winds by 2 pi while the under-coupled case barely moves." widths={[600, 1000, 1270]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={cavityResponse} alt="Two-panel plot: reflected intensity versus detuning, where over- and under-coupled cavities overlap exactly; and reflection phase versus detuning, where the over-coupled case winds by 2 pi while the under-coupled case barely moves." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
-          Computed from the expression above. <strong>Top:</strong> the over- and under-coupled
-          traces sit exactly on top of each other — intensity is degenerate. <strong>Bottom:</strong>
-          the same two cases are immediately distinguishable in phase. This degeneracy is the
-          entire reason the interferometer exists.
+          Computed for <em>κ</em><sub>ext</sub>/<em>κ</em> = 0.8 (over-coupled), 0.5
+          (critical), 0.2 (under-coupled). <strong>Top:</strong> the over- and under-coupled
+          intensity traces coincide exactly. <strong>Bottom:</strong> the same two cases are
+          immediately distinguishable in phase — the degeneracy this interferometer exists to
+          break.
         </figcaption>
       </figure>
 
       <CriticalityDivider label="the interferometer" />
 
-      <h2>Reading phase with an unbalanced Mach–Zehnder</h2>
+      <h2>The setup</h2>
+      <p>
+        The instrument is an all-fibre Mach–Zehnder built on the bench, no cryostat involved.
+        The cavity sits in the signal arm behind a circulator; the reference arm carries the
+        local oscillator through a variable delay stage and an adjustable attenuator that
+        matches the per-arm power. The arms recombine on a 50:50 coupler and are read out on
+        two photodiodes — PDs, not APDs, since the fringes here are large classical voltages
+        and what matters is linear, high-bandwidth detection, not photon counting. The PD
+        difference drives a servo on a Red Pitaya that closes the loop onto two in-fibre AOMs,
+        one per arm.
+      </p>
+
+      <figure class="fig">
+        <InterferometerDiagram />
+        <figcaption>
+          Setup, redrawn from my own sketch: signal arm (AOM → tap → circulator → cavity) and
+          reference arm (AOM → delay stage → attenuator), recombined onto photodiodes PD1/PD2
+          whose difference drives the Red Pitaya servo phase-locking the two AOMs.
+        </figcaption>
+      </figure>
+
+      <h2>Reading phase out</h2>
       <p>
         Phase is not directly observable; it has to be converted into intensity by
-        interference against a reference. The cavity sits in the signal arm of a fibre
-        Mach–Zehnder interferometer; the other arm carries a local oscillator through a
-        variable delay. Recombining on a 50:50 coupler gives two complementary outputs,
+        interference against the reference. Recombining the two arms gives two complementary
+        outputs,
       </p>
 
       <div class="eq">
@@ -111,11 +147,37 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <p>
-        of which only the first is wanted. The second is the propagation phase of the arm
-        imbalance and the third is a control knob — both have to be dealt with.
+        of which only the first is wanted; the second is the propagation phase of any arm
+        imbalance and the third is a control knob — both have to be characterised and removed
+        before <em>φ</em><sub>c</sub> means anything.
       </p>
 
-      <h2>Path matching and the free spectral range</h2>
+      <figure class="fig">
+        <Image src={mziTransfer} alt="Two-panel plot: complementary MZI output intensities I+ and I- versus differential phase, showing offset cosine fringes; and fringe visibility versus arm delay mismatch in units of coherence time, showing a Gaussian roll-off." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Computed transfer function. <strong>Left:</strong> <em>I</em><sub>+</sub> and
+          <em>I</em><sub>−</sub> versus differential phase. <strong>Right:</strong> visibility
+          rolling off as the arm delay mismatch approaches the laser coherence time.
+        </figcaption>
+      </figure>
+
+      <p>
+        The real fringes look exactly like this: sweeping the optical phase at six injected
+        offsets from 0° to 150° traces out the same cosine, successively shifted — raw
+        confirmation that the transfer function above is what the hardware actually does.
+      </p>
+
+      <figure class="fig">
+        <Image src={fringesComplementary} alt="Top: overlapping interference fringes (PD1 minus PD2) versus swept optical phase for six injected phase offsets from 0 to 150 degrees. Bottom: the two complementary photodiode voltages versus applied phase, out of phase with each other." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Measured fringes. <strong>Top:</strong> PD-difference signal versus swept phase for
+          injected offsets 0°–150°. <strong>Bottom:</strong> the two individual photodiode
+          traces beneath one such sweep, out of phase — the raw complementary outputs the lock
+          rides on.
+        </figcaption>
+      </figure>
+
+      <h2>Path matching and the arm imbalance</h2>
       <p>
         An arm-length mismatch Δ<em>L</em> contributes a delay
         Δ<em>τ</em> = <em>n</em>Δ<em>L</em>/<em>c</em>, which appears as a linear ramp in
@@ -128,45 +190,65 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <p>
-        This makes the FSR a <em>ruler</em> for the imbalance: measure the fringe period with
-        the cavity detuned away, invert it, and you know how much fibre to add. A metre of
-        residual mismatch in fibre (<em>n</em> ≈ 1.47) corresponds to an FSR of a couple of
-        hundred MHz, so coarse matching is done by splicing a computed length of fibre and
-        the remainder is trimmed with the delay stage. Getting this right matters twice
-        over: the ramp must be subtracted to recover <em>φ</em><sub>c</sub> cleanly, and fringe
-        visibility itself decays with mismatch once Δ<em>τ</em> approaches the laser coherence
-        time,
+        which makes the FSR a ruler for the imbalance. I added roughly 10 m of extra fibre to
+        one arm to bring the two paths into rough length match; fibre-length bookkeeping put
+        the residual imbalance at Δ<em>L</em> ≈ −1.915 m, to be closed out with the delay
+        stage. I checked that number independently by timing the per-arm pulse arrival
+        directly — launching a short pulse down each arm and fitting a Gaussian/erf-box
+        lineshape to each arrival — which gave <em>dt</em> = −9.5495 ns →
+        Δ<em>L</em> = −1.9515 m, agreeing with the fibre bookkeeping to within about 3.6 cm.
       </p>
-
-      <div class="eq">
-        <em>V</em> ∝ exp[−(Δ<em>τ</em>/<em>τ</em><sub>c</sub>)<sup>2</sup>]
-      </div>
-
-      <p>
-        Once the ramp is calibrated out against a reference sweep, the residual is the
-        cavity's own phase response, and the winding number reads off the coupling regime.
-      </p>
-
-      <CriticalityDivider label="setup" />
 
       <figure class="fig">
-        <InterferometerDiagram />
+        <Image src={armImbalance} alt="Per-arm pulse arrival time plot: two Gaussian peaks slightly offset in time, with erf-box fits, labeled dt = -9.5495 ns, dL = -1.9515 m." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
-          Schematic of the setup, redrawn from my own sketch. The signal arm carries the probe
-          to the cavity through a circulator; the reference arm carries the local oscillator
-          through a delay stage and an adjustable attenuator that matches the per-arm power.
-          The arms recombine on a 50:50 coupler read out on two photodiodes, whose difference
-          drives a servo that holds the fringe at a chosen operating point by feeding a common
-          RF phase to the two in-fibre AOMs.
+          Per-arm pulse arrival, normalised counts versus time since sync. Gaussian/erf-box
+          fits to arm 1 and arm 2 give <em>dt</em> = −9.5495 ns →
+          Δ<em>L</em> = −1.9515 m, matching the fibre-length target of −1.915 m.
         </figcaption>
       </figure>
 
-      <h2>Holding the fringe: AOM phase control</h2>
+      <p>
+        The same pulse-arrival measurement done straight off the two AOMs, bypassing the rest
+        of the interferometer, told a different story: each AOM has an intrinsic acoustic
+        delay, the transit time for the RF drive to propagate across the acousto-optic
+        interaction region before it modulates the light. The tell was that swapping which
+        channel of the signal generator (SDG) drove which AOM flipped the sign of the measured
+        delay — from <em>dt</em> = +40.9949 ns → Δ<em>L</em> = +8.3777 m to
+        <em>dt</em> = −41.0286 ns → Δ<em>L</em> = −8.3846 m — with the fibre paths themselves
+        untouched. A genuine path-length asymmetry cannot care which electrical channel drives
+        which AOM; a delay that tracks the channel assignment instead has to live inside the
+        AOM/RF chain, and its further dependence on drive voltage confirms an acousto-electronic
+        origin. Left uncorrected it enters Δ<em>φ</em>(<em>ω</em>) indistinguishably from a
+        genuine <em>ω</em>Δ<em>τ</em> arm mismatch, biasing any coupling ratio extracted from a
+        real cavity.
+      </p>
+
+      <figure class="fig">
+        <Image src={aomDelayPositive} alt="Per-arm pulse arrival plot with AOMs connected directly to detectors: dt = +40.9949 ns, dL = +8.3777 m." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          AOMs driven directly into the detectors, signal generator on its original channel
+          assignment: <em>dt</em> = +40.9949 ns → Δ<em>L</em> = +8.3777 m.
+        </figcaption>
+      </figure>
+
+      <figure class="fig">
+        <Image src={aomDelayNegative} alt="Same measurement with the signal generator channels swapped between the two AOMs: dt = -41.0286 ns, dL = -8.3846 m, sign flipped relative to the previous figure." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          SDG channels swapped between the two AOMs: <em>dt</em> = −41.0286 ns →
+          Δ<em>L</em> = −8.3846 m. The sign flip, fibre untouched, signs the delay as internal
+          to the AOMs.
+        </figcaption>
+      </figure>
+
+      <CriticalityDivider label="locking" />
+
+      <h2>Locking the fringe</h2>
       <p>
         A fibre interferometer drifts — thermal expansion and acoustic pickup move
-        Δ<em>φ</em> by many radians on a timescale of seconds, so an unlocked instrument
-        measures nothing. The actuators are the two acousto-optic modulators. An AOM driven
-        at <em>V</em><sub>RF</sub>(<em>t</em>) = <em>V</em><sub>0</sub>cos(Ω<sub>RF</sub><em>t</em> + <em>δφ</em><sub>AOM</sub>)
+        Δ<em>φ</em> continuously, and the detected count rate wanders with it, so an unlocked
+        instrument measures nothing. The actuators are the two AOMs: an AOM driven at
+        <em>V</em><sub>RF</sub>(<em>t</em>) = <em>V</em><sub>0</sub>cos(Ω<sub>RF</sub><em>t</em> + <em>δφ</em><sub>AOM</sub>)
         transfers the instantaneous RF phase onto the first-order diffracted beam,
       </p>
 
@@ -176,33 +258,139 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <p>
-        giving a piezo-free, GHz-bandwidth optical phase shifter. Driving the two arms on
-        opposite diffraction orders turns one common RF phase into a <em>differential</em>
-        optical phase,
+        Driving the two arms on opposite diffraction orders turns one common RF phase into a
+        differential optical phase, Δ<em>φ</em><sub>AOM</sub> = 2<em>δφ</em><sub>AOM</sub>, so
+        a single number written to the Red Pitaya steers the fringe directly.
       </p>
 
-      <div class="eq">
-        Δ<em>φ</em><sub>AOM</sub> = (+<em>δφ</em><sub>AOM</sub>) − (−<em>δφ</em><sub>AOM</sub>) = 2<em>δφ</em><sub>AOM</sub>
-      </div>
+      <figure class="fig">
+        <Image src={countDrift} alt="Detector count rate versus time on two channels, wandering continuously over tens of seconds." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Detector count rate versus time on two channels, unlocked — the drift the servo has
+          to fight.
+        </figcaption>
+      </figure>
 
       <p>
-        so a single number written to the servo steers the fringe directly. Locking and
-        probing are interleaved in time: a frequency-fixed laser holds the lock while a
-        tunable laser sweeps the cavity, each gated by its own preparation AOM, so the servo
-        never has to follow the probe as it scans.
+        Locking and probing are interleaved rather than simultaneous. One capture cycle
+        freezes the PID, holds the servo on its plateau, then the SDG writes a new phase step
+        — in one annotated cycle the write itself took 13.3 ms between the SCPI command being
+        issued and returning — after which the optical phase visibly jumps and scanning
+        resumes with the injected phase in effect. That interleaving is what lets a
+        fixed-frequency lock coexist with a phase deliberately stepped for calibration.
       </p>
 
-      <h2>What I did</h2>
-      <ul>
-        <li>Worked through the component-level design — what each element contributes and why the arrangement of diffraction orders is what makes the loop closeable.</li>
-        <li>Derived the detected signal and the conditions for maximum fringe contrast, including the balanced-detection difference and the power-matching requirement |<em>E</em><sub>S</sub>| = |<em>E</em><sub>L</sub>|.</li>
-        <li>Path-matched the arms: measured the FSR, converted it into a physical length, and trimmed the residual with the delay stage.</li>
-        <li>Set up and characterised the AOM-based phase lock, and the interleaved lock/probe timing that lets a fixed-frequency reference stabilise a swept measurement.</li>
-      </ul>
+      <figure class="fig">
+        <Image src={lockInjectionTimeline} alt="Annotated timeline of one capture cycle: PIDs frozen, servo plateau locked, SDG issuing and completing a phase write over 13.3 milliseconds, then the optical phase visibly jumping, then scanning resuming." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          One capture cycle, annotated: locked plateau, SDG phase write (13.3 ms), the phase
+          visibly jumping, then scanning continuing with the new phase in effect.
+        </figcaption>
+      </figure>
 
-      <p class="note">
-        This page describes the method and the physics. Device-specific performance figures
-        from the group's unpublished work are deliberately left out.
+      <p>
+        The lock itself came together in two steps. On 13 July 2026, turning off the phase
+        modulation on channel 1 and recalibrating produced the first successful lock. On 17
+        July 2026, I locked the full arm — delay stage and fibre spool included — using the
+        photodiodes, taking the loop from an oscillating fringe to a flat, held plateau.
+      </p>
+
+      <figure class="fig">
+        <Image src={lockPerformance} alt="Two-panel plot: upper panel shows two photodiode voltages oscillating widely then snapping to a flat locked plateau; lower panel shows the actuator voltage jumping then settling into small correction excursions." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Lock performance, 17 July 2026: error signal (upper, two photodiode channels)
+          swinging widely unlocked, then snapping onto a flat plateau; actuator voltage
+          (lower) making an initial correction and settling into small excursions.
+        </figcaption>
+      </figure>
+
+      <h2>Validating the phase readout</h2>
+      <p>
+        To know whether the locked instrument reads phase correctly, I injected a known
+        optical phase — 0°, 30°, 60°, 90°, 120°, 150° — through the AOM RF phase and measured
+        it back through the lock. The first pass, reading the phase directly against a
+        recorded start voltage, tracked the ideal <em>y</em> = <em>x</em> line on average but
+        with visible scatter between repeated cycles at a given injected phase.
+      </p>
+
+      <figure class="fig">
+        <Image src={phaseLinearity} alt="Scatter plot of injected phase versus probed phase in degrees, with per-cycle measurements scattered around the ideal y = x line and per-point means tracking it." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Injected versus probed phase, first pass: per-cycle measurements (points) and
+          per-point means (diamonds) against the ideal <em>y</em> = <em>x</em> line, at
+          injected phases of 0°–150°.
+        </figcaption>
+      </figure>
+
+      <p>
+        Switching to a differential, self-referenced analysis — comparing each phase step
+        against its own cycle's starting point rather than an absolute recorded voltage —
+        removed the slow drift that had been aliasing into the first method as scatter.
+        Per-point errors across the injected range came out at roughly 0.05°–0.64°, with
+        per-point standard deviations of about 0.36°–0.79° over <em>n</em> = 7 repeated
+        cycles at most injected phases.
+      </p>
+
+      <figure class="fig">
+        <Image src={phaseLinearityDifferential} alt="Scatter plot of injected phase versus measured phase using the differential, self-referenced method, with error and standard deviation annotated at each injected phase, points collapsed tightly onto the y = x line." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Differential self-referenced method: errors of 0.05°–0.64°, standard deviations of
+          0.36°–0.79° over <em>n</em> = 7 cycles per point — a marked improvement over the
+          first-pass readout above.
+        </figcaption>
+      </figure>
+
+      <h2>Toward the cavity</h2>
+      <p>
+        With the lock characterised and the readout validated, the remaining piece is coupling
+        light into the actual nanophotonic device — fibre-to-chip alignment under a microscope,
+        watched live while the fibre tip is walked onto the device edge.
+      </p>
+
+      <figure class="fig">
+        <Image src={fiberCouplingMicrograph} alt="Micrograph from an alignment camera showing an optical fibre tip positioned near the edge of a nanophotonic device." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Fibre tip aligned to the device edge under the coupling microscope.
+        </figcaption>
+      </figure>
+
+      <p>
+        A first reflection scan across the device shows the signature this apparatus exists to
+        interpret: a clear resonance dip in the 723–727 nm range — the intensity-only view
+        that leaves over- versus under-coupling undetermined until the interferometer is
+        brought to bear on it.
+      </p>
+
+      <figure class="fig">
+        <Image src={cavityReflectionDip} alt="Reflection scan across roughly 721 to 727.5 nanometres showing a clear dip in counts around 723 to 727 nanometres." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Reflection scan, counts versus wavelength: a resonance dip in the 723–727 nm range.
+        </figcaption>
+      </figure>
+
+      <h2>Conclusions</h2>
+      <p>
+        This project produced a working, room-temperature, all-fibre Mach–Zehnder
+        interferometer, locked against drift with a two-AOM, Red Pitaya servo, with a phase
+        readout validated to sub-degree accuracy — errors of 0.05°–0.64°, standard deviations
+        of 0.36°–0.79°, over repeated calibration cycles. Getting there meant treating the arm
+        imbalance and the AOM chain as separate problems: the physical path mismatch was
+        pinned down twice, by fibre bookkeeping and by direct pulse-arrival timing, to
+        Δ<em>L</em> ≈ −1.9 m, while the AOMs' own acoustic delay — exposed by the sign flip
+        under channel swapping — had to be identified and kept from masquerading as part of
+        that mismatch. The lock moved from a first success on 13 July to a full-arm lock, delay
+        stage and fibre spool included, on 17 July.
+      </p>
+      <p>
+        What limits the instrument now is largely statistics and integration: several
+        calibration points still rest on a single cycle rather than the <em>n</em> = 7 used
+        elsewhere, and the AOM delay's dependence on drive voltage means a change in operating
+        point calls for fresh calibration rather than a fixed correction. The cavity itself has
+        so far only been characterised in intensity, giving the reflection dip but not the
+        coupling ratio. The natural next step is to route that cavity into the signal arm and
+        sweep it under lock, using the interleaved lock/probe sequence demonstrated here to
+        extract <em>φ</em><sub>c</sub>(<em>ω</em>) directly and read the winding number that
+        intensity alone cannot provide.
       </p>
     </div>
 

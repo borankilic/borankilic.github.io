@@ -6,6 +6,15 @@ node_modules/
 dist/
 .astro/
 
+# This project lives under an iCloud-synced ~/Desktop. iCloud evicts file
+# contents inside node_modules (dataless placeholders), which breaks builds
+# with ETIMEDOUT on read. macOS skips any path ending in .nosync, so deps are
+# installed into node_modules.nosync with node_modules symlinked to it.
+node_modules.nosync/
+
+# Foreman orchestration scratch
+.foreman/
+
 # Editor
 .vscode/
 .idea/
