@@ -22,7 +22,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <Base
   title="Phase interferometry for nanophotonic cavities"
-  description="A room-temperature, all-fibre Mach–Zehnder interferometer I built and locked to read out the reflection phase of a nanophotonic cavity, resolving the over- versus under-coupled degeneracy that reflected intensity alone cannot."
+  description="A room-temperature Mach–Zehnder interferometer I built and locked to read out the reflection phase of a nanophotonic cavity, resolving the over- versus under-coupled degeneracy that reflected intensity alone cannot."
 >
   <article class="shell">
     <p class="back"><a href={base + '/research'}>← Research</a></p>
@@ -33,7 +33,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p class="proj-blurb">
         A cavity's reflected <em>intensity</em> cannot tell you whether it is over- or
         under-coupled — both regimes produce the same dip. The reflected <em>phase</em> can.
-        I built an all-fibre Mach–Zehnder interferometer to read that phase out on the bench,
+        I built a Mach–Zehnder interferometer to read that phase out on the bench,
         at room temperature, phase-locked it against acoustic and thermal drift with two AOMs
         and a Red Pitaya servo, and validated the readout to sub-degree precision by injecting
         a known phase and measuring it back.
@@ -91,7 +91,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={cavityResponse} alt="Two-panel plot: reflected intensity versus detuning, where over- and under-coupled cavities overlap exactly; and reflection phase versus detuning, where the over-coupled case winds by 2 pi while the under-coupled case barely moves." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={cavityResponse} alt="Two-panel plot: reflected intensity versus detuning, where over- and under-coupled cavities overlap exactly; and reflection phase versus detuning, where the over-coupled case winds by 2 pi while the under-coupled case barely moves." widths={[600, 1000, 1190]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           Computed for <em>κ</em><sub>ext</sub>/<em>κ</em> = 0.8 (over-coupled), 0.5
           (critical), 0.2 (under-coupled). <strong>Top:</strong> the over- and under-coupled
@@ -105,10 +105,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <h2>The setup</h2>
       <p>
-        The instrument is an all-fibre Mach–Zehnder built on the bench, no cryostat involved.
-        The cavity sits in the signal arm behind a circulator; the reference arm carries the
-        local oscillator through a variable delay stage and an adjustable attenuator that
-        matches the per-arm power. The arms recombine on a 50:50 coupler and are read out on
+        The instrument is a Mach–Zehnder built on the bench. The signal arm runs to the cavity
+        through a circulator; the reference arm carries the local oscillator through a variable
+        delay stage, a fibre spool, and an adjustable attenuator that matches the per-arm power.
+        The arms recombine on a 50:50 coupler and are read out on
         two photodiodes — PDs, not APDs, since the fringes here are large classical voltages
         and what matters is linear, high-bandwidth detection, not photon counting. The PD
         difference drives a servo on a Red Pitaya that closes the loop onto two in-fibre AOMs,
@@ -168,7 +168,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={fringesComplementary} alt="Top: overlapping interference fringes (PD1 minus PD2) versus swept optical phase for six injected phase offsets from 0 to 150 degrees. Bottom: the two complementary photodiode voltages versus applied phase, out of phase with each other." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={fringesComplementary} alt="Top: overlapping interference fringes (PD1 minus PD2) versus swept optical phase for six injected phase offsets from 0 to 150 degrees. Bottom: the two complementary photodiode voltages versus applied phase, out of phase with each other." widths={[600, 1000]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           Measured fringes. <strong>Top:</strong> PD-difference signal versus swept phase for
           injected offsets 0°–150°. <strong>Bottom:</strong> the two individual photodiode
@@ -200,7 +200,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={armImbalance} alt="Per-arm pulse arrival time plot: two Gaussian peaks slightly offset in time, with erf-box fits, labeled dt = -9.5495 ns, dL = -1.9515 m." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={armImbalance} alt="Per-arm pulse arrival time plot: two Gaussian peaks slightly offset in time, with erf-box fits, labeled dt = -9.5495 ns, dL = -1.9515 m." widths={[600, 760]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           Per-arm pulse arrival, normalised counts versus time since sync. Gaussian/erf-box
           fits to arm 1 and arm 2 give <em>dt</em> = −9.5495 ns →
@@ -225,7 +225,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={aomDelayPositive} alt="Per-arm pulse arrival plot with AOMs connected directly to detectors: dt = +40.9949 ns, dL = +8.3777 m." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={aomDelayPositive} alt="Per-arm pulse arrival plot with AOMs connected directly to detectors: dt = +40.9949 ns, dL = +8.3777 m." widths={[600, 760]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           AOMs driven directly into the detectors, signal generator on its original channel
           assignment: <em>dt</em> = +40.9949 ns → Δ<em>L</em> = +8.3777 m.
@@ -233,7 +233,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </figure>
 
       <figure class="fig">
-        <Image src={aomDelayNegative} alt="Same measurement with the signal generator channels swapped between the two AOMs: dt = -41.0286 ns, dL = -8.3846 m, sign flipped relative to the previous figure." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={aomDelayNegative} alt="Same measurement with the signal generator channels swapped between the two AOMs: dt = -41.0286 ns, dL = -8.3846 m, sign flipped relative to the previous figure." widths={[600, 760]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           SDG channels swapped between the two AOMs: <em>dt</em> = −41.0286 ns →
           Δ<em>L</em> = −8.3846 m. The sign flip, fibre untouched, signs the delay as internal
@@ -264,7 +264,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={countDrift} alt="Detector count rate versus time on two channels, wandering continuously over tens of seconds." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={countDrift} alt="Detector count rate versus time on two channels, wandering continuously over tens of seconds." widths={[600, 790]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           Detector count rate versus time on two channels, unlocked — the drift the servo has
           to fight.
@@ -281,7 +281,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={lockInjectionTimeline} alt="Annotated timeline of one capture cycle: PIDs frozen, servo plateau locked, SDG issuing and completing a phase write over 13.3 milliseconds, then the optical phase visibly jumping, then scanning resuming." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={lockInjectionTimeline} alt="Annotated timeline of one capture cycle: PIDs frozen, servo plateau locked, SDG issuing and completing a phase write over 13.3 milliseconds, then the optical phase visibly jumping, then scanning resuming." widths={[600, 760]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           One capture cycle, annotated: locked plateau, SDG phase write (13.3 ms), the phase
           visibly jumping, then scanning continuing with the new phase in effect.
@@ -314,7 +314,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={phaseLinearity} alt="Scatter plot of injected phase versus probed phase in degrees, with per-cycle measurements scattered around the ideal y = x line and per-point means tracking it." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={phaseLinearity} alt="Scatter plot of injected phase versus probed phase in degrees, with per-cycle measurements scattered around the ideal y = x line and per-point means tracking it." widths={[600, 700]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           Injected versus probed phase, first pass: per-cycle measurements (points) and
           per-point means (diamonds) against the ideal <em>y</em> = <em>x</em> line, at
@@ -325,18 +325,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p>
         Switching to a differential, self-referenced analysis — comparing each phase step
         against its own cycle's starting point rather than an absolute recorded voltage —
-        removed the slow drift that had been aliasing into the first method as scatter.
-        Per-point errors across the injected range came out at roughly 0.05°–0.64°, with
-        per-point standard deviations of about 0.36°–0.79° over <em>n</em> = 7 repeated
-        cycles at most injected phases.
+        removed the slow drift that had been aliasing into the first method as scatter. This
+        pass annotated results at 0°, 30°, 60°, 120°, and 150° — it does not include a 90°
+        point — with errors of roughly 0.05°–0.64° and, where more than one cycle was
+        recorded, standard deviations of about 0.36°–0.79°. The number of repeated cycles
+        varied point to point, from <em>n</em> = 1 up to <em>n</em> = 7, rather than a fixed
+        <em>n</em> = 7 throughout.
       </p>
 
       <figure class="fig">
-        <Image src={phaseLinearityDifferential} alt="Scatter plot of injected phase versus measured phase using the differential, self-referenced method, with error and standard deviation annotated at each injected phase, points collapsed tightly onto the y = x line." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={phaseLinearityDifferential} alt="Scatter plot of injected phase versus measured phase using the differential, self-referenced method, with error and standard deviation annotated at five injected phases (0, 30, 60, 120, 150 degrees; no 90-degree point), points collapsed tightly onto the y = x line." widths={[600, 669]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
-          Differential self-referenced method: errors of 0.05°–0.64°, standard deviations of
-          0.36°–0.79° over <em>n</em> = 7 cycles per point — a marked improvement over the
-          first-pass readout above.
+          Differential self-referenced method: errors of 0.05°–0.64° at the five annotated
+          points (0°, 30°, 60°, 120°, 150° — no 90° point in this pass), with standard
+          deviations of 0.36°–0.79° where repeated; per-point cycle counts ranged from
+          <em>n</em> = 1 to <em>n</em> = 7 — a marked improvement over the first-pass readout
+          above.
         </figcaption>
       </figure>
 
@@ -344,33 +348,35 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p>
         With the lock characterised and the readout validated, the remaining piece is coupling
         light into the actual nanophotonic device — fibre-to-chip alignment under a microscope,
-        watched live while the fibre tip is walked onto the device edge.
+        watched live while a freshly-tapered fibre is walked into position over the sample.
       </p>
 
       <figure class="fig">
-        <Image src={fiberCouplingMicrograph} alt="Micrograph from an alignment camera showing an optical fibre tip positioned near the edge of a nanophotonic device." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={fiberCouplingMicrograph} alt="Micrograph from an alignment camera showing a tapered optical fibre near a sample during fibre-to-cavity coupling." widths={[600, 760]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
-          Fibre tip aligned to the device edge under the coupling microscope.
+          A tapered fibre positioned near the sample during coupling, viewed through the
+          alignment microscope.
         </figcaption>
       </figure>
 
       <p>
         A first reflection scan across the device shows the signature this apparatus exists to
-        interpret: a clear resonance dip in the 723–727 nm range — the intensity-only view
-        that leaves over- versus under-coupling undetermined until the interferometer is
-        brought to bear on it.
+        interpret: a clear resonance dip near 723.6 nm, within a 721.0–727.5 nm scan — the
+        intensity-only view that leaves over- versus under-coupling undetermined until the
+        interferometer is brought to bear on it.
       </p>
 
       <figure class="fig">
-        <Image src={cavityReflectionDip} alt="Reflection scan across roughly 721 to 727.5 nanometres showing a clear dip in counts around 723 to 727 nanometres." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={cavityReflectionDip} alt="Reflection scan across roughly 721.0 to 727.5 nanometres showing a clear dip in counts near 723.6 nanometres." widths={[600, 622]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
-          Reflection scan, counts versus wavelength: a resonance dip in the 723–727 nm range.
+          Reflection scan, counts versus wavelength, 721.0–727.5 nm: a resonance dip near
+          723.6 nm.
         </figcaption>
       </figure>
 
       <h2>Conclusions</h2>
       <p>
-        This project produced a working, room-temperature, all-fibre Mach–Zehnder
+        This project produced a working, room-temperature Mach–Zehnder
         interferometer, locked against drift with a two-AOM, Red Pitaya servo, with a phase
         readout validated to sub-degree accuracy — errors of 0.05°–0.64°, standard deviations
         of 0.36°–0.79°, over repeated calibration cycles. Getting there meant treating the arm

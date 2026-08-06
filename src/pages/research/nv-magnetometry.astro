@@ -3,7 +3,6 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import CriticalityDivider from '../../components/CriticalityDivider.astro';
 import nvSetup from '../../assets/research/nv_setup.png';
-import hyperfine from '../../assets/research/nv/hyperfine_odmr.png';
 import rawPl from '../../assets/research/nv/raw_pl_dc_removed.png';
 import envelopeComparison from '../../assets/research/nv/envelope_comparison.png';
 import quadratureEnvelope from '../../assets/research/nv/quadrature_envelope.png';
@@ -17,7 +16,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <Base
   title="NV-center magnetometry"
-  description="A room-temperature diamond magnetometer based on continuous-wave ODMR of nitrogen-vacancy ensembles, with square-wave frequency modulation and lock-in readout reaching about 10 nT/√Hz."
+  description="A room-temperature diamond magnetometer based on continuous-wave ODMR of nitrogen-vacancy ensembles, with frequency-modulated lock-in readout reaching about 10 nT/√Hz."
 >
   <article class="shell">
     <p class="back"><a href={base + '/research'}>← Research</a></p>
@@ -27,7 +26,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <h1>CW-ODMR and Lock-in Magnetometry with Nitrogen-Vacancy Centers</h1>
       <p class="proj-blurb">
         A diamond magnetometer built around continuous-wave optically detected magnetic
-        resonance. Square-wave frequency modulation of the microwave drive converts the
+        resonance. Frequency modulation of the microwave drive converts the
         resonance dip into a dispersive lock-in signal that is linear in field at its zero
         crossing — giving a calibrated 36 µT/V response and a noise floor near 10 nT/√Hz.
       </p>
@@ -123,33 +122,35 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         Diamond's host lattice gives NV centers four possible orientations, one along each of
         the four ⟨111⟩ crystallographic axes. An arbitrarily directed bias field projects
         differently onto each axis, so an ensemble containing all four orientations shows four
-        Zeeman-split pairs, not one, each shifted by its own <em>B</em><sub>∥</sub>. Under a strong
-        bias field from a stack of neodymium magnets, this is exactly what the spectrum resolves:
-        four distinct groups, each split again into three lines by the 2.16 MHz <sup>14</sup>N
-        hyperfine coupling, for twelve lines total. Because each orientation's
-        <em>m</em><sub>s</sub> = ±1 levels are already split symmetrically about <em>D</em>, the
-        whole pattern is symmetric about ≈2.874 GHz.
+        Zeeman-split pairs, not one, each shifted by its own <em>B</em><sub>∥</sub>.
+      </p>
+
+      <p>
+        To resolve this directly I stacked roughly ten neodymium bar magnets on the XYZ stage to
+        produce a strong bias field — deliberately not an ideal or well-controlled one. The
+        field's direction and magnitude at the diamond are not known precisely: some field lines
+        pass through the metal of the stage, and a bar magnet's field is highly inhomogeneous. A
+        high-turn Helmholtz coil would be the better source, but the coils available could not be
+        driven to a comparably high field. Sweeping 2.874 GHz ± 10 MHz — frequency modulation on
+        the RF generator with a 10 MHz deviation, a 0.1 Hz triangular rate, and the output kept at
+        or below 10 dBm — and running the same envelope-recovery pipeline described below
+        resolved eight sets of three peaks. Each set of three is the <em>m</em><sub>I</sub> = −1,
+        0, +1 <sup>14</sup>N hyperfine triplet; the whole pattern is symmetric about 2.874 GHz
+        because each orientation's levels are already split into <em>m</em><sub>s</sub> = −1 and
+        <em>m</em><sub>s</sub> = +1 branches by the (arbitrarily directed) bias field; and there
+        are four distinct groups, not one, because the four crystallographic orientations each see
+        a different projection of that field. Four orientations times two Zeeman branches gives
+        the eight sets of three actually observed.
       </p>
 
       <p>
         This spectrum is a useful diagnostic in its own right: the four splittings encode the
-        bias field's direction relative to the diamond lattice, and resolving all twelve lines
+        bias field's direction relative to the diamond lattice, and resolving all eight sets
         confirms both adequate microwave coupling bandwidth and narrow enough linewidths across
         the span. It is also the calibration step for everything that follows — operating the
         magnetometer means picking one line and working the lock-in scheme around it, so knowing
-        exactly where the twelve lines sit under a given bias is a prerequisite, not a side
-        measurement.
+        exactly where the lines sit under a given bias is a prerequisite, not a side measurement.
       </p>
-
-      <figure class="fig">
-        <Image src={hyperfine} alt="Panels (a) and (b) show the NV crystallographic axes relative to the applied bias field B0; panel (c) shows the lock-in signal in microvolts versus microwave frequency from about 2.82 to 2.92 GHz, resolving four groups of three hyperfine lines each." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
-        <figcaption>
-          (a, b) The four NV symmetry axes relative to the applied bias field <em>B</em><sub>0</sub>,
-          each seeing a different projection and hence a different Zeeman shift. (c) Lock-in
-          signal versus microwave frequency, 2.82–2.92 GHz: four groups of three hyperfine lines,
-          symmetric about ≈2.874 GHz.
-        </figcaption>
-      </figure>
 
       <h2>Getting a usable signal out of noise</h2>
       <p>
@@ -176,16 +177,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={rawPl} alt="Raw photodetector time trace showing a DC offset, and the same trace with the DC component removed." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={rawPl} alt="Raw photodetector output whose axis is labeled as time but is actually swept microwave frequency, showing a constant DC offset, and the same record with that offset subtracted." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
-          Raw photoluminescence time trace (top) dominated by a slowly drifting DC offset from
-          laser intensity and alignment drift, and the same trace with the DC component removed
-          (bottom), isolating the AC content that carries the resonance information.
+          Raw photodetector output (top) — the axis reads as time but is actually the swept
+          microwave frequency — riding on a constant 4.974638 V DC offset, and the same record
+          with that offset subtracted (bottom), isolating the AC content that carries the
+          resonance information.
         </figcaption>
       </figure>
 
       <figure class="fig">
-        <Image src={envelopeComparison} alt="Comparison of envelope-recovery methods — moving average, upper envelope, peak detection, exponential follower, and quadrature envelope — applied to the same noisy record." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={envelopeComparison} alt="Comparison of envelope-recovery methods — moving average, upper envelope, peak detection, exponential follower, and quadrature envelope — applied to the same noisy record." widths={[600, 1000, 1268]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           Five envelope-recovery methods on the same noisy record: moving average, upper
           envelope, peak detection, exponential follower, and the quadrature envelope. The
@@ -221,7 +223,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <p>
         with contrast <em>C</em> and FWHM <em>ν</em> ≈ 18.3 MHz for our ensemble. Instead of
-        sweeping and fitting, the carrier is square-wave frequency modulated,
+        sweeping and fitting, the carrier is frequency modulated at <em>f</em><sub>mod</sub> =
+        18 kHz (square-wave, in the derivation that follows, which samples the lineshape at
+        exactly two points per cycle — though a companion electronics log for this measurement
+        instead records the modulation as a sine at the same rate and deviation, so treat the
+        exact waveform as not fully settled between the two reports),
       </p>
 
       <div class="eq">
@@ -237,9 +243,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         dispersive curve that crosses zero exactly at <em>ω</em><sub>C</sub> = <em>ω</em><sub>0</sub>.
         Hold the carrier there and any applied field shifts <em>ω</em><sub>0</sub>, which shows up
         as a lock-in output proportional to the field, with no fitting required. Sensitivity is
-        set by the slope at that zero crossing, and differentiating the demodulated lineshape
-        with respect to <em>ω</em><sub>dev</sub> shows the slope is steepest at a specific
-        modulation depth:
+        set by the slope at that zero crossing, and differentiating the idealized
+        single-Lorentzian lineshape above with respect to <em>ω</em><sub>dev</sub> shows that
+        slope is steepest at a specific modulation depth:
       </p>
 
       <div class="eq">
@@ -247,9 +253,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <p>
-        Operated there, the lock-in output is linear in applied field over the useful range
-        spanning roughly the linewidth around <em>ω</em><sub>0</sub>. Sweeping the carrier
-        through resonance and recording the lock-in output directly gives that dispersive curve;
+        which for <em>ν</em> = 18.3 MHz works out to <em>ω</em><sub>dev</sub> ≈ 5.3 MHz. In
+        practice the deviation used for magnetometry was found empirically — sweeping
+        <em>ω</em><sub>dev</sub> and directly maximising the measured zero-crossing slope — and
+        settled at <em>ω</em><sub>dev</sub> ≈ 1.2 MHz, well below that theoretical value. The gap
+        is a real limitation of the single-Lorentzian model: the actual resonance is split by the
+        <sup>14</sup>N hyperfine coupling into three overlapping lines, and the clean optimum
+        above does not account for that structure. Operated at the empirical working point, the
+        lock-in output is linear in applied field over the useful range spanning roughly the
+        linewidth around <em>ω</em><sub>0</sub>. Sweeping the carrier through resonance and
+        recording the lock-in output directly gives that dispersive curve;
         a linear fit through its zero crossing gives the slope, and its inverse — calibrated
         against a fluxgate reference — is the voltage-to-field conversion factor
       </p>
@@ -264,7 +277,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
 
       <figure class="fig">
-        <Image src={lockinSweep} alt="Lock-in ODMR spectrum from a frequency sweep: the dispersive lineshape with smoothed data and a linear fit through the zero crossing." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <Image src={lockinSweep} alt="Lock-in ODMR spectrum from a frequency sweep: the dispersive lineshape with smoothed data and a linear fit through the zero crossing." widths={[600, 1000, 1226]} sizes="(max-width: 44rem) 92vw, 42rem" />
         <figcaption>
           Lock-in output versus carrier frequency across a single resonance: the dispersive
           curve (smoothed) with a linear fit through its zero crossing. The fitted slope, via
@@ -332,10 +345,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <h2>Conclusions</h2>
       <p>
-        The instrument does what it was built to do: a swept spectrum resolves all twelve
-        hyperfine lines from the four NV orientations, confirming the spin physics and giving a
-        clean calibration point, and the square-wave-modulated lock-in scheme turns that
-        spectroscopy into a continuous, linear field readout with a measured 36 µT/V conversion
+        The instrument does what it was built to do: a swept spectrum under bias resolves eight
+        sets of three hyperfine lines from the four NV orientations, confirming the spin physics
+        and giving a clean calibration point, and the frequency-modulated lock-in scheme turns
+        that spectroscopy into a continuous, linear field readout with a measured 36 µT/V conversion
         and a sensitivity of order 100 nT/√Hz at low frequency, improving toward 10 nT/√Hz above
         a few hundred hertz. The dominant limitation right now is not the spin physics or the
         detection electronics — it is technical noise entering through the optical path, chiefly
