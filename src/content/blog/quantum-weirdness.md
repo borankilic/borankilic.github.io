@@ -5,7 +5,7 @@ date: 2026-06-09
 tags: [Quantum, Foundations, Optics]
 ---
 
-I'm still a student of this subject, so take what follows as one learner's way of organising the strangeness rather than the last word. People say quantum mechanics is weird, and then usually point at the math, as if the strangeness lived in the differential equations. I've come to think it doesn't. The math is clean. The weirdness is what the clean math *forces you to give up*, and most of us don't notice we were holding those assumptions until the theory pries our fingers off them one at a time.
+People say quantum mechanics is weird, and then usually point at the math, as if the strangeness lived in the differential equations. I've come to think it doesn't. The math is clean. The weirdness is what the clean math *forces you to give up*, and most of us don't notice we were holding those assumptions until the theory pries our fingers off them one at a time.
 
 ## Weirdness #1: superposition isn't ignorance
 

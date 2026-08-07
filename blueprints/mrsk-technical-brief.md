@@ -87,6 +87,30 @@ multi ratio shift keying, fixed threshold decoding, memory cancellation, ratio o
 Detection complexity is reported as O(N(N−1)/2 + N + M(N−1)) for N molecule types and M-ary signalling.
 Studies in the paper sweep BER against distance *d*, ratio range *Ω*, bit duration *t_b*, and *Q*.
 
+## Molecule budget and the adaptive mapping scheme
+
+Nanomachines operate where resources are scarce, and MRSK consumes molecules heavily — the reservoirs
+will eventually run dry. The paper addresses this directly:
+
+- **Fig. 3** plots molecule consumption per bit (in units of the base molecule count *Q*, averaged over
+  the symbol set) across a range of *N* and *M*. This is the honest cost curve of the scheme.
+- **Adaptive symbol-to-molecule mapping.** The transmitter watches how much of each species remains and
+  reassigns the mapping accordingly: the **most frequently used symbol goes to the most abundant
+  species**, the least used symbol to the scarcest, and the rest are distributed by redundancy. The
+  ordering is refreshed whenever it changes.
+- **Fig. 4** compares maximum messages transmitted with and without adaptive mapping, for *M* = 1 and an
+  initial reservoir of 1000*Q*. Adaptive mapping improves transmission longevity by **39.1 % at N = 2,
+  rising monotonically to 86.9 % at N = 10** — the benefit grows with the number of molecule types.
+
+## Validating the ratio distribution
+
+**Fig. 5** plots the PDF of the received ratio η = X/Y for transmitted ratios of **1, e, and e⁻¹**,
+overlaying five curves: the sampled ratio (reference, drawn from Gaussians), the exact expression, the
+"solid" approximation, a Gaussian approximation, and the particle-based simulation. The exact, solid,
+and Gaussian curves agree closely across the range; the simulated curve sits slightly lower at the peak
+and heavier in the tails. This is what justifies using the tractable approximation for the BER
+derivation instead of the exact ratio distribution.
+
 ## Results and conclusions
 
 - MRSK **consistently beats** every conventional scheme compared, on BER.
@@ -101,6 +125,29 @@ Studies in the paper sweep BER against distance *d*, ratio range *Ω*, bit durat
   resilience in diverse molecular networks, and integration into biological and nanotechnology-based
   communication platforms.
 
+## Figures available in the repo
+
+Four figures were extracted from the paper and committed to `src/assets/research/mrsk/`. These are
+Boran's own figures from his own paper, and he has approved their use. Caption them accurately — the
+wording below is taken from the paper:
+
+| File | Figure | Caption |
+|---|---|---|
+| `fig1-system-topology.png` | Fig. 1 | General systems topology of MRSK. N molecule reservoirs feed a modulator and mixing chamber; molecules diffuse across the MC channel over distance *d* to a receiver of radius *r*, then an output transducer and demodulator recover the bits. |
+| `fig3-molecules-per-bit.png` | Fig. 3 | Average number of molecules used per bit in MRSK across a range of *N*, *M* parameters. |
+| `fig4-adaptive-mapping.png` | Fig. 4 | Maximum number of messages transmittable with and without the adaptive transmission scheme, for varying *N*. |
+| `fig5-ratio-pdfs.png` | Fig. 5 | PDFs of the received ratio when the transmitted ratios are 1, e, and e⁻¹. |
+
+Use `astro:assets` `<Image>` imports for these, as the other research pages do. `fig1-system-topology.png`
+is the natural card thumbnail and page hero — **use it instead of authoring an SVG**.
+
+## Scope: this is a SUMMARY, not a reproduction
+
+Boran's explicit instruction: **do not post the full paper — write a summary.** The entry should convey
+the idea, the reasoning, the headline results, and why it matters, at the depth of the existing
+`nv-magnetometry` and `synthetic-mri` pages. Do not transcribe derivations, reproduce the equation set,
+or walk through all 13 figures. Link the DOI for anyone who wants the full treatment.
+
 ## Notes for writing the entry
 
 - This is Boran's **first-author journal paper** — the most senior publication on the site. It already
@@ -109,4 +156,4 @@ Studies in the paper sweep BER against distance *d*, ratio range *Ω*, bit durat
 - It is **distinct** from the MolCom 2026 work (`neural-inspired-molecular-communication`), which is
   about collective intelligence and criticality in nanomachine swarms. Same field and same advisor
   (Akan), different contribution. Cross-referencing them is reasonable; conflating them is not.
-- There is no figure asset for MRSK in the repo. Do not fabricate one or reuse another entry's image.
+- Figure assets now exist (see above). Do not fabricate additional figures or reuse another entry's image.
