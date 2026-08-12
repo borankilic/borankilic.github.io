@@ -5,10 +5,22 @@ import CriticalityDivider from '../../components/CriticalityDivider.astro';
 import interferometerThumb from '../../assets/research/interferometer_thumb.jpg';
 import nvThumb from '../../assets/research/nv_thumb.jpg';
 import synMriThumb from '../../assets/research/synthetic_mri_thumb.jpg';
+import mrskThumb from '../../assets/research/mrsk/fig1-system-topology.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const entries = [
+  {
+    slug: 'mrsk',
+    card: 'MRSK Modulation',
+    title: 'Multi Ratio Shift Keying (MRSK) Modulation for Molecular Communication',
+    blurb:
+      'A modulation scheme that encodes information into the ratios of several molecule types — so the detection threshold no longer depends on the channel.',
+    thumb: mrskThumb,
+    alt: 'System topology of MRSK: molecule reservoirs feeding a modulator and mixing chamber, diffusing across the channel to a spherical receiver.',
+    year: '2025',
+    where: 'Koç University (CXC)',
+  },
   {
     slug: 'phase-interferometry',
     card: 'Phase Interferometry',
@@ -54,6 +66,7 @@ const publications = [
     authors: 'B. A. Kılıç, Ö. B. Akan',
     title: 'Multi-Ratio Shift Keying (MRSK) Modulation for Molecular Communication',
     venue: 'IEEE Transactions on Communications, vol. 73, no. 10 · Oct 2025',
+    href: 'https://doi.org/10.1109/TCOMM.2025.3581006',
   },
   {
     authors: 'D. Yüksel Dal, B. A. Kılıç, G. Gamgam',

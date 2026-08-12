@@ -1,0 +1,295 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CriticalityDivider from '../../components/CriticalityDivider.astro';
+import mrskTopology from '../../assets/research/mrsk/fig1-system-topology.png';
+import mrskRatioPdfs from '../../assets/research/mrsk/fig5-ratio-pdfs.png';
+import mrskMolecules from '../../assets/research/mrsk/fig3-molecules-per-bit.png';
+import mrskAdaptive from '../../assets/research/mrsk/fig4-adaptive-mapping.png';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base
+  title="MRSK Modulation"
+  description="Multi Ratio Shift Keying: a molecular communication modulation scheme that encodes information in the ratios of several molecule types, giving a detection threshold independent of the channel."
+>
+  <article class="shell">
+    <p class="back"><a href={base + '/research'}>← Research</a></p>
+
+    <header class="proj-head">
+      <p class="eyebrow">2025 · Koç University, Center for neXt-generation Communications</p>
+      <h1>Multi Ratio Shift Keying (MRSK) Modulation for Molecular Communication</h1>
+      <p class="proj-blurb">
+        Molecular communication sends information by releasing molecules into a fluid and
+        letting them diffuse. Diffusion is slow, so molecules from earlier symbols are still
+        arriving when the next one is sent — the dominant error source in the field. MRSK
+        sidesteps it by encoding into the <em>ratios</em> of several molecule types rather than
+        their absolute counts, which makes the detection threshold independent of the channel.
+      </p>
+
+      <dl class="proj-meta">
+        <div><dt>Role</dt><dd>First author · with Prof. Özgür B. Akan</dd></div>
+        <div>
+          <dt>Topics</dt>
+          <dd class="tags">
+            <span class="tag">molecular communication</span>
+            <span class="tag">modulation</span>
+            <span class="tag">ratio distributions</span>
+            <span class="tag">bit error rate</span>
+          </dd>
+        </div>
+        <div>
+          <dt>Published</dt>
+          <dd class="links">
+            <a href="https://doi.org/10.1109/TCOMM.2025.3581006" target="_blank" rel="noopener">IEEE Trans. Communications 73(10), 2025 ↗</a>
+          </dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="prose">
+      <h2>The idea</h2>
+      <p>
+        Existing molecular modulation schemes encode into one of three properties: concentration
+        (OOK, CSK, PAM), molecule type (MoSK), or release time (RTSK). All of them share a
+        weakness — the quantity carrying the information decays with distance and time, so the
+        receiver's decision threshold has to track the channel. Get the channel estimate wrong and
+        the symbol is wrong.
+      </p>
+      <p>
+        MRSK encodes into the ratio of the concentrations of different molecule types, and
+        specifically into <em>all</em> the ratios available within a set of them. The transmitter
+        holds <em>N</em> molecule species in separate reservoirs; a modulator selects them into a
+        mixing chamber and releases them together as a concentration spike. The receiver counts what
+        arrives and reads the ratio.
+      </p>
+
+      <figure class="fig">
+        <Image src={mrskTopology} alt="MRSK system topology: N molecule reservoirs feed a modulator and mixing chamber, molecules diffuse across the channel over distance d to a spherical receiver of radius r, then an output transducer and demodulator recover the bits." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          General systems topology of MRSK. <em>N</em> molecule reservoirs feed a modulator and
+          mixing chamber; molecules diffuse across the channel over distance <em>d</em> to a
+          receiver of radius <em>r</em>, where an output transducer and demodulator recover the
+          bits.
+        </figcaption>
+      </figure>
+
+      <h2>Why a ratio is the right thing to send</h2>
+      <p>
+        The argument turns on one observation. If the molecule species share the same diffusion
+        coefficient, their spatiotemporal distributions track each other as they spread. The
+        absolute count at the receiver falls off with distance and time; the <em>expected ratio</em>
+        does not — it is constant in space and time.
+      </p>
+
+      <div class="eq">
+        <em>η</em> = <span class="frac"><span class="num"><em>X</em></span><span class="den"><em>Y</em></span></span>
+         →  ⟨<em>η</em>⟩ independent of <em>d</em> and <em>t</em>
+      </div>
+
+      <p>That single fact buys several things at once:</p>
+      <ul>
+        <li>
+          <strong>A fixed detection threshold.</strong> Because the expected ratio does not move,
+          the threshold does not have to be re-estimated per link or per channel condition.
+        </li>
+        <li>
+          <strong>Suitability for one-to-many links.</strong> A transmitter can serve several
+          receivers at once without retuning modulation or demodulation parameters for each,
+          making non-coherent detection across a SIMO system practical.
+        </li>
+        <li>
+          <strong>Lighter distribution tails.</strong> The probability density of a ratio of
+          Gaussians has lighter tails than the individual Gaussians built from the same molecule
+          count, which is where the resilience to inter-symbol interference and Gaussian noise
+          comes from.
+        </li>
+        <li>
+          <strong>Freedom in the molecule budget.</strong> The same ratio can be produced with any
+          total number of molecules — useful when resources are scarce.
+        </li>
+      </ul>
+
+      <p>
+        The idea has precedent in biology, which is part of what makes it appealing for systems
+        meant to operate inside a body. Rats can distinguish binary odour mixtures by the molar
+        ratio of their components, recognising the same mixture across varying absolute
+        concentrations. In metabolic networks, relative concentrations — the ATP/ADP balance in
+        glycolysis, for instance — regulate enzyme activity and pathway flux rather than absolute
+        quantities.
+      </p>
+
+      <p>
+        Ratio-based encoding had been tried before, in Isomer Ratio Shift Keying and later in Ratio
+        Shift Keying, but both use only the ratio of <em>two</em> molecule types and both assume
+        symbol intervals long enough that channel memory can be ignored. MRSK drops both
+        restrictions: an M-ary scheme over all ratios of an arbitrary molecule set, with memory
+        accounted for.
+      </p>
+
+      <CriticalityDivider label="the mathematics" />
+
+      <h2>Making the ratio tractable</h2>
+      <p>
+        Encoding into a ratio means the detection statistic is a ratio of random variables, and the
+        statistics of Gaussian ratio distributions in this setting were largely unexplored. Deriving
+        the bit error rate precisely required building that framework — the distribution of ratios
+        of noncentral Gaussian random variables — and then finding an approximation tractable enough
+        to use.
+      </p>
+
+      <figure class="fig">
+        <Image src={mrskRatioPdfs} alt="Three probability density plots of the received ratio, centred near 1, e, and e to the minus one, each overlaying sampled, exact, solid-approximation, Gaussian-approximation and simulated curves." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          PDFs of the received ratio when the transmitted ratios are 1, <em>e</em>, and
+          <em>e</em><sup>−1</sup>. The exact expression, the solid approximation and the Gaussian
+          approximation agree closely; the particle-based simulation sits slightly lower at the peak
+          and heavier in the tails.
+        </figcaption>
+      </figure>
+
+      <p>
+        That agreement is what justifies using the tractable approximation for the BER derivation
+        instead of the exact ratio distribution. Simulations used a transmitter–receiver distance
+        <em>d</em> = 10 µm, receiver radius <em>r</em> = 5 µm, diffusion coefficient
+        <em>D</em> = 79.4 µm²/s, and a channel memory of <em>L</em> = 5 symbols.
+      </p>
+
+      <CriticalityDivider label="the cost" />
+
+      <h2>The molecule budget, and what to do about it</h2>
+      <p>
+        MRSK is not free. Encoding into ratios consumes molecules heavily, and nanomachines operate
+        exactly where resources are scarce — the reservoirs will eventually run dry.
+      </p>
+
+      <figure class="fig">
+        <Image src={mrskMolecules} alt="Surface plot of average moles used per bit against the number of molecule types N and the modulation order M." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Average number of molecules used per bit across a range of <em>N</em>, <em>M</em>
+          parameters — the honest cost curve of the scheme.
+        </figcaption>
+      </figure>
+
+      <p>
+        The answer is to stop treating the symbol-to-molecule assignment as fixed. The transmitter
+        watches how much of each species remains and reassigns the mapping accordingly: the most
+        frequently used symbol goes to the most abundant species, the least used symbol to the
+        scarcest, and the rest are distributed by redundancy, with the ordering refreshed whenever
+        it changes.
+      </p>
+
+      <figure class="fig">
+        <Image src={mrskAdaptive} alt="Adaptive versus non-adaptive transmission: average steps until reservoir depletion against the number of molecule types N, with percentage improvement rising from 39.1 percent to 86.9 percent." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          Maximum number of messages transmittable with and without the adaptive scheme, for varying
+          <em>N</em>. Adaptive mapping extends transmission longevity by 39.1 % at <em>N</em> = 2,
+          rising to 86.9 % at <em>N</em> = 10 — the benefit grows with the number of molecule types.
+        </figcaption>
+      </figure>
+
+      <h2>What came out</h2>
+      <p>
+        Against every conventional scheme compared — OOK, CSK, PAM, MoSK, RTSK, and ADMC — MRSK
+        gives better bit error rate. Two design results are worth stating plainly, because they cut
+        against the instinct that more is better. Under moderate channel conditions, binary
+        modulation with the <em>fewest</em> molecule types is optimal. It is only when bit times must
+        be short that higher-order modulation, or more molecule types, earns its keep by mitigating
+        inter-symbol interference — which is what makes the scheme suited to high data rates.
+      </p>
+      <p>
+        There is also a convex relationship between the ratio range and the BER, so the spacing of
+        the ratios is a real parameter to optimise rather than a free choice.
+      </p>
+
+      <h2>Honest limits</h2>
+      <p>
+        The molecule cost is the main one: MRSK can require more molecules than conventional
+        schemes, so it belongs in applications that demand high precision in environments where
+        molecules are abundant, not in the most starved regimes. The channel-invariance argument
+        also rests on the molecule species sharing a diffusion coefficient; how far that can be
+        relaxed is not something this work settles. The authors name three directions from here:
+        refining threshold optimisation under varying channel conditions, testing resilience in more
+        diverse molecular networks, and integrating the scheme into real biological and
+        nanotechnology-based platforms.
+      </p>
+      <p class="aside">
+        A separate strand of this work, with the same group, asks what happens when the nanomachines
+        stop being point-to-point transceivers and start behaving as a collective — see
+        <a href={base + '/projects/neural-inspired-molecular-communication'}>neural-inspired molecular communication networks</a>.
+      </p>
+    </div>
+
+    <footer class="proj-foot">
+      <a href={base + '/research'}>← Back to research</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .shell { max-width: 44rem; }
+  .back { font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 1.5rem; }
+  .back a, .proj-foot a { color: var(--muted); }
+  .back a:hover, .proj-foot a:hover { color: var(--accent); }
+
+  .proj-head { margin-bottom: 2rem; }
+  .proj-head h1 { margin: 0.15em 0 0.35em; font-size: var(--step-3); line-height: 1.12; }
+  .proj-blurb { font-size: 1.18rem; line-height: 1.55; color: var(--ink-soft); max-width: 40rem; }
+  .proj-meta {
+    margin: 1.8rem 0 0; display: grid; gap: 0.9rem;
+    padding: 1.2rem 0 0; border-top: 1px solid var(--faint);
+  }
+  .proj-meta > div { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; align-items: baseline; }
+  .proj-meta dt {
+    font-family: var(--font-mono); font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+  .proj-meta dd { margin: 0; color: var(--ink-soft); }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; }
+  .tag {
+    font-family: var(--font-mono); font-size: 0.74rem;
+    color: var(--accent-deep); background: var(--accent-wash);
+    padding: 0.15rem 0.5rem; border-radius: 3px;
+  }
+  .links { display: flex; flex-direction: column; gap: 0.3rem; align-items: start; }
+  .links a { font-family: var(--font-mono); font-size: 0.86rem; }
+
+  .fig { margin: 2rem 0; }
+  .fig :global(img) {
+    display: block; width: 100%;
+    border: 1px solid var(--faint); border-radius: 4px; background: #fff;
+  }
+  .fig figcaption {
+    font-family: var(--font-mono); font-size: var(--step--1);
+    color: var(--muted); margin-top: 0.6rem; line-height: 1.55;
+  }
+
+  .eq {
+    margin: 1.4rem 0; padding: 0.85rem 1rem;
+    text-align: center; font-size: 1.12rem; line-height: 1.9;
+    background: var(--paper-raised);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    overflow-x: auto;
+  }
+  .eq em { font-style: italic; }
+  .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 0.15rem; }
+  .frac .num { border-bottom: 1px solid var(--ink); padding: 0 0.35rem 0.1rem; line-height: 1.35; }
+  .frac .den { padding: 0.1rem 0.35rem 0; line-height: 1.35; }
+
+  .aside {
+    margin-top: 2rem; padding-top: 1.1rem;
+    border-top: 1px solid var(--faint);
+    font-size: 0.95rem; color: var(--muted);
+  }
+
+  .proj-foot {
+    margin-top: 3rem; padding-top: 1.4rem;
+    border-top: 1px solid var(--faint);
+    font-family: var(--font-mono); font-size: 0.82rem;
+  }
+  @media (max-width: 34rem) {
+    .proj-meta > div { grid-template-columns: 1fr; gap: 0.2rem; }
+  }
+</style>
