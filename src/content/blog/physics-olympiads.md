@@ -1,128 +1,155 @@
 ---
 title: Five Years of Physics Olympiad
-description: What an olympiad problem asks of you that a school problem never does — and what years of being stuck taught me about how to think.
+description: What olympiad problems demand that syllabus problems do not, and what five years of them changed about the way I approach a physical system.
 date: 2026-08-11
 tags: [Physics, Problem solving, Olympiad]
 draft: false
 ---
 
-I started in the first year of high school. I was fourteen. My school was a pilot school built around
-science olympiad training — maths, biology, chemistry, physics — with teachers who taught the material
-properly and a university professor who came in once a week. Right after the classes started I knew this
-was not going to resemble the regular lessons. I stayed with it until 2022.
+I competed in the Turkish National Physics Olympiad from 2018 to 2022. I started in my first year of
+high school, at fourteen.
 
-This is the post I'd want to hand to myself at fourteen, so I'm going to be specific about the part
-that actually mattered, which was not the competition.
+I should be clear about the circumstances, because they did a great deal of the work. My school was a
+pilot school organised around science olympiad training in mathematics, biology, chemistry and physics.
+We had teachers who knew the material properly and taught it regularly, and a university professor who
+came in once a week. Very few students get that, and much of what follows is downstream of it rather
+than of anything I did. What I can speak to is what the problems themselves demanded, and what changed
+in how I work as a result.
 
-## What an olympiad problem is
+## What an olympiad problem asks for
 
-A school physics problem tells you what to do. It arrives attached to a chapter, and the chapter tells
-you which formula is in play. The skill being tested is recognition.
+A syllabus problem is posed inside a chapter, and the chapter constrains the answer. The relevant law
+has usually been named in the preceding pages, so the task reduces to recognising which template
+applies and substituting into it.
 
-An olympiad problem gives you a real scenario — a rotating pendulum system, a complicated circuit — and
-the dimensions and parameters of that system. From there it is all up to you. You analyse the system.
-You make an initial guess about how it will behave. You decide which laws and equations to bring. You
-write them out meticulously and solve them algebraically, which is usually the most time-consuming part
-and also the easiest. Then you interpret what came out.
+An olympiad problem gives you a physical scenario — a rotating pendulum, a non-trivial circuit — along
+with its geometry and parameters, and stops there. The remaining decisions are yours: how to model the
+system, what behaviour to expect before you calculate anything, which laws are the economical ones to
+impose, how to set up the resulting equations, and what the solution means once you have it. You are
+not being directed, and the problem will not tell you when you have chosen badly.
 
-**You are free. You are not directed.** That is the whole difference, and it changes what the work
-feels like. There is no simple reasoning step the problem is checking you for. It fuses topics that were
-taught to you separately. It takes far longer, because the solution is a chain of steps rather than a
-single move, and you have to be able to execute every link in the chain. You need to know your physics,
-not a formula.
+Several consequences follow. The problems routinely combine topics that were taught separately, so the
+partition of physics into chapters stops being useful. They are long, in the specific sense that the
+solution is a chain of steps in which an early modelling error is not recoverable later. And the
+algebra, which is usually the most time-consuming stage, is rarely the difficult one.
 
-One more difference that took me a while to appreciate: there is almost no arithmetic. You work in
-symbols the whole way. It keeps you from being distracted by particular numbers, and it means the
-result you end up with generalises to every system of that shape rather than the one you were handed.
+One convention matters more than it appears to. Olympiad problems are almost entirely symbolic; numbers
+are substituted at the end, if at all. Working in symbols keeps the structure of the result visible —
+which quantities appear, in what combination, and with what scaling — and that structure is what
+transfers to the next system. A numerical answer tells you about one configuration; a symbolic one
+tells you about the family it belongs to.
 
-## The washing machine
+## A worked example: the wobbling washing machine
 
-The problem I still think about was a wobbling washing machine. It was modelled as a cube of side
-length *L* with a cylindrical hole of radius *R* inside it. A rectangular rod is fixed at the centre and
-rotates at angular frequency *ω*. Find the maximum *ω* before it starts to wobble.
+The problem I still return to modelled a washing machine as a cube of side *L* containing a cylindrical
+cavity of radius *R*, with a rectangular rod fixed at the centre and rotating at angular frequency *ω*.
+It asked for the maximum *ω* before the machine begins to wobble.
 
-The first real task was working out what *wobbling* meant here, because the problem does not tell you.
-It means one side of the cube loses contact with the ground. That is already the kind of step school
-never asks for — translating an everyday word into a mechanical condition.
+The first task is translation. *Wobbling* is not a mechanical quantity, and the problem does not define
+it. The usable statement is that one edge of the cube loses contact with the ground — that is, the
+normal force distributed over the base is driven to zero along one edge. Tipping about that edge then
+becomes the condition to analyse: the rotating rod is an unbalanced mass, so in the frame of the machine
+it contributes an inertial load that varies sinusoidally over each revolution, and the question is
+whether its torque about the opposite bottom edge can exceed the restoring torque from the weight.
 
-Then I wrote the equations of motion, and they were not analytically solvable. Depending on which regime
-*ω* was in, you got different curves; in some regimes two of them intersect and in others they do not.
-The thing that cracked it: at the critical condition, those two curves are **tangent** to each other.
-And tangency is a much easier condition to impose than intersection, because the derivatives are
-algebraically far simpler than the original expressions.
+Writing the equations of motion is straightforward. Solving them is not — they admit no closed form, and
+which curves you are comparing depends on the regime of *ω*. In some regimes the two relevant curves
+intersect and in others they do not, which is exactly the structure you would expect from a threshold
+problem, and exactly what makes it awkward to attack head-on.
 
-That is a beautiful problem. You do not get to it by knowing more physics. You get to it by being
-willing to sit with a system until you notice that the question "when do these two curves stop meeting"
-has a cleaner form than the question you were originally asked.
+The step that resolves it is to characterise the threshold rather than solve for it. At the critical
+condition the two curves neither cross nor separate: they touch. Tangency is a double root, so instead
+of solving one intractable equation you impose two simpler simultaneous ones — that the curves meet, and
+that their slopes agree there. In this case the derivatives were algebraically far lighter than the
+expressions they came from, and the system became tractable.
 
-## Being stuck is the actual curriculum
+I find that worth recording because the insight was not additional physics. The mechanics was already on
+the page. What was required was noticing that the boundary between two regimes has a cleaner
+characterisation than either regime does — a substitution of one question for an equivalent, easier one.
 
-Being stuck is common and it is necessary. There were plenty of problems I simply could not solve. What
-I learned to do was leave them — come back days later, sometimes weeks.
+## Working while stuck
 
-My main move when stuck was to work backwards. The books gave answers but not solutions, so I would look
-at the final expression and ask why it would take that particular form. What would have to be true for
-the answer to look like this? Then I'd guess at the equations that would produce it. Reconstructing that
-path is the part that teaches you something; the answer itself is worth nothing.
+Being stuck is the ordinary condition, not a sign that something has gone wrong. There were many
+problems I never solved. The habit I settled on was to leave a problem deliberately and return days or
+weeks later, which was more productive than any amount of continuous effort.
 
-The harder lesson was about stubbornness, which olympiad training gives you in large quantities and does
-not teach you to aim. After long enough on one problem, your brain stops being able to look at it from
-another angle and you start insisting on your own method. I eventually realised how harmful that is.
-The move is not to push through — it is to stop, and come back the next morning with a fresh mind and a
-new point of view. Persistence and rigidity feel identical from the inside while you are in it.
+When a problem would not move, I worked backwards. The books gave final answers but not solutions, so I
+would examine the form of the answer and ask what it implied: which quantities appear, which are absent,
+how it behaves in limiting cases, what dimensional structure it has. From that I could usually
+reconstruct a plausible set of governing equations and test whether they led there. The reconstruction is
+the part with any value; the answer on its own has almost none.
 
-There were a lot of days that ended with nothing solved. They are frustrating, and they contributed the
-most.
+The more useful lesson was about persistence, which this kind of training supplies in quantity without
+teaching you where to point it. After long enough on one approach, I would stop being able to see the
+problem from any other angle and would begin defending the method I had already invested in. Recognising
+that state took me a long time. The remedy was not to push harder but to stop and return the following
+morning, when a different formulation was often immediately available. Persistence and rigidity are
+difficult to tell apart from the inside, and I do not think I ever fully learned to.
 
-## The magnetron
+A great many days ended with nothing solved. Those days were frustrating, and I suspect they contributed
+more than the productive ones.
 
-The strangest thing that happened, I have never been able to explain properly.
+## An unexpected route: the magnetron
 
-I was working on a magnetron problem — the component in a microwave oven that generates the microwaves —
-trying to find the final velocity of the electrons. I was doing it the direct way: writing down the
-electric and magnetic fields, computing radial and tangential velocities, grinding through complicated
-integrals. It was not going anywhere.
+One episode I have never been able to account for properly.
 
-Then I dreamt the answer. In the dream it came to me that I did not need any of that — I could just use
-conservation of energy and momentum. I woke up in the middle of the night, wrote it down, and it was
-right.
+I was working on a magnetron — the component in a microwave oven that generates the microwaves — trying
+to find the final velocity of the electrons. I was doing it directly: writing down the electric and
+magnetic fields, resolving the motion into radial and tangential components, and grinding through the
+resulting integrals. It was not converging on anything.
 
-It has happened more than once, but that was the one that mattered. I don't think it was mystical. I
-think it is what happens when you have loaded a problem so completely into your head that some part of
-you keeps working on it after you have stopped choosing to. The dream did not give me physics I didn't
-know. It gave me permission to abandon the approach I had committed to — which was exactly the thing I
-could not do while awake.
+The resolution came in a dream, and it was that none of that was necessary — the problem yields to
+conservation of energy and momentum. I woke in the middle of the night, wrote it down, and it was
+correct.
 
-## What you get
+The reason it works is worth stating, since it is the general lesson rather than a trick. The magnetic
+force acts perpendicular to the velocity and therefore does no work, so the entire energy budget is set
+by the electric potential difference the electron has traversed; that fixes the speed without any
+reference to the path taken to acquire it. The symmetry of the configuration supplies a second conserved
+quantity, and two scalar constraints are enough to determine what integrating the trajectory would have
+given far more laboriously. Conservation laws are indifferent to the route between endpoints, which is
+precisely why they are cheap when the route is complicated.
 
-There is a specific feeling when you finally understand a system completely, and it is the reason to do
-any of this. It is relieving. You can break the whole thing into parts in your head, recombine them, and
-**you own it**. It is powerful and fulfilling at the same time, because of what it replaces — the state
-of cluelessness you were in an hour or a week before.
+It has happened more than once, though never as usefully. I would not read much into the dream itself.
+My suspicion is that it is what follows from holding a problem in mind continuously enough that some
+part of the work proceeds without deliberate attention — and that its real contribution was permission
+to abandon an approach I had committed to, which was the one thing I could not do while awake.
 
-The triumph after solving one is quieter than people expect. It is relief and peace. Like putting down
-something heavy. And it is enlightening, in the plain sense that afterwards you can see.
+## What it gives you
 
-That feeling was most of why I kept going. There were practical reasons too — extra credit on the
-university entrance exam, a scholarship — and I won't pretend those didn't count.
+There is a particular state that arrives when a system finally becomes clear, and it is the reason to do
+any of this. It is closer to relief than to excitement. The system decomposes into parts that can be
+held separately and reassembled at will, and it stops being something you are working against. What
+makes it substantial is the contrast with the position you occupied an hour or a week earlier, when none
+of it resolved.
 
-## What survived
+The feeling after solving a hard problem is quieter than people expect. Relief, mostly, and something
+like having set down a weight.
 
-The habit that followed me into research is that I still want to derive everything concretely. I find it
-much harder than my colleagues do to move forward on an assumption I haven't checked or an equation I
-haven't derived myself. Once it is all written down from first principles there is no question mark left,
-and I am far more confident in the experiment I'm running.
+That was most of why I continued. There were practical reasons as well — additional credit on the
+university entrance examination, and a scholarship — and it would be dishonest to leave them out.
 
-It is not only about confidence. It is what lets me change things. When I can derive what should happen,
-I can predict what a modification will do and improve the setup deliberately, instead of trusting
-intuition or reaching for whatever the nearest paper did.
+## What carried into research
 
-## Would I tell someone to do it
+The habit that persisted is that I want to derive things concretely. I find it harder than most of my
+colleagues to build on an assumption I have not checked or an equation I have not worked through myself.
+Once something is written out from first principles I stop having reservations about it, and I am
+considerably more confident in the measurement I am setting up.
 
-Only if they are willing to do what it takes. It is genuinely not for everyone. It is difficult, and it
-is isolating in a way that is easy to underplay — you spend a great deal of time alone with something
-that is beating you.
+The practical benefit is less about confidence than about control. When I can derive what a system
+should do, I can predict what a modification will do and change the setup deliberately, rather than
+reasoning by analogy with what a related experiment happened to do. I should say that this is not
+uniformly an advantage: it is slower, and there are situations where a well-established result should
+simply be used. Colleagues who are more comfortable proceeding on established ground often get there
+first.
 
-But it taught me to fight a problem instead of putting it down, and to keep looking for another route
-when the one I was on ran out. That is the part I use every day, and I would make the same decision
-again.
+## Whether it is worth doing
+
+I would recommend it to someone prepared for what it involves, which is not everyone and is not a
+judgement about ability. It is demanding, and it is more isolating than it is usually described as being
+— a considerable amount of time spent alone with a problem that is winning.
+
+What I took from it was a tolerance for not knowing yet, and the habit of looking for another route
+rather than concluding there isn't one. That generalises well beyond physics, and it is the part I still
+rely on. I am reasoning from a single case and a fortunate set of circumstances, so I would not push the
+recommendation further than that — but given the choice again, I would make the same one.
