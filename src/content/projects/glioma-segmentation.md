@@ -27,7 +27,9 @@ Built on the **BraTS 2021** dataset (multi-modal T1, T1CE, T2, FLAIR scans from 
   - **Necrotic core** from the T1CE hypointensity, seeded inside a 3D convex hull of the enhancing-tumor mask and grown with Seeded Region Growing or Marker-Controlled Watershed (the default); if the result comes out under 5,000 voxels, it falls back to the convexified enhancing-tumor mask minus the enhancing tumor itself.
   - **Tumor core** = necrotic core ∪ enhancing tumor; **edema** = whole tumor − tumor core.
 
-![Sagittal T2-weighted MRI slice from the BraTS dataset — the kind of multi-modal input the pipeline operates on.](../../assets/projects/glioma-segmentation/mri.png)
+![Eight-panel figure: top row shows seeded region growing progressing from initial seeds through intermediate steps to the final result; bottom row shows marker-controlled watershed doing the same, with the convex hull drawn in blue and background regions in cyan.](../../assets/projects/glioma-segmentation/segmentation-progression.png)
+
+The necrotic-core step is where the two growing strategies differ visibly. **Seeded region growing** (top row) expands outward from seed points placed inside the convex hull of the enhancing tumor, accepting voxels that meet the intensity criterion — so the red region grows monotonically and stays inside the hull. **Marker-controlled watershed** (bottom row, the default) instead floods from both foreground and background markers simultaneously and lets the two fronts meet, which is why the background region in cyan advances into the frame alongside the foreground. The watershed formulation is the more robust of the two precisely because the competing background marker constrains the foreground from expanding indefinitely; region growing has no such opponent, which is what makes it prone to the leakage described below.
 
 ## Results
 

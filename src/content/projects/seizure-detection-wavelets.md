@@ -24,6 +24,14 @@ EEG is non-stationary: the frequency content of a seizure changes moment to mome
 
 ![EEG brain-wave decomposition via a db2 wavelet: delta, theta, alpha, beta, gamma and high-frequency bands, each with its energy.](../../assets/projects/seizure-detection-wavelets/bands.png)
 
+## What a seizure looks like in time–frequency
+
+Before any classifier, the continuous wavelet transform makes the target visible. Scalograms built with a Morlet wavelet show where signal energy sits jointly in time and frequency, and the two classes do not look alike. A healthy recording has diffuse, low-amplitude energy scattered across scales with occasional short bursts — activity that comes and goes. A seizure recording concentrates intense energy in a narrow band around 5–20 Hz and *sustains* it across the whole epoch.
+
+That contrast is the entire argument for the method in one image. The discriminating property is not which frequencies are present — both recordings have energy near 10 Hz — but whether that energy persists in time. A Fourier transform integrates the time axis away and therefore cannot represent the difference, which is exactly what the FFT baseline below fails on.
+
+![Two scalograms side by side: a healthy subject showing diffuse low-energy activity with a short burst, and an epileptic subject showing a sustained high-energy band around 5 to 20 hertz across the full epoch.](../../assets/projects/seizure-detection-wavelets/scalograms.png)
+
 ## Results
 
 The best model — **db2 wavelet + XGBoost** — reaches **96.2% accuracy, 90.2% F1-score, and 98.7% ROC-AUC** (5-fold CV mean). Broken down by class: **98.70% specificity** on non-seizure epochs against **86.74% recall** on seizure epochs, so most of the residual error is seizures the model misses rather than false alarms.
