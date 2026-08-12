@@ -6,6 +6,8 @@ import mrskTopology from '../../assets/research/mrsk/fig1-system-topology.png';
 import mrskRatioPdfs from '../../assets/research/mrsk/fig5-ratio-pdfs.png';
 import mrskMolecules from '../../assets/research/mrsk/fig3-molecules-per-bit.png';
 import mrskAdaptive from '../../assets/research/mrsk/fig4-adaptive-mapping.png';
+import mrskBerTb from '../../assets/research/mrsk/fig12-ber-vs-symbol-time.png';
+import mrskBerQ from '../../assets/research/mrsk/fig13-ber-vs-molecules.png';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
@@ -192,11 +194,44 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <h2>What came out</h2>
       <p>
         Against every conventional scheme compared — OOK, CSK, PAM, MoSK, RTSK, and ADMC — MRSK
-        gives better bit error rate. Two design results are worth stating plainly, because they cut
-        against the instinct that more is better. Under moderate channel conditions, binary
-        modulation with the <em>fewest</em> molecule types is optimal. It is only when bit times must
-        be short that higher-order modulation, or more molecule types, earns its keep by mitigating
-        inter-symbol interference — which is what makes the scheme suited to high data rates.
+        gives better bit error rate. The two comparisons below are the ones that matter in practice,
+        because they sweep the two resources a designer actually trades against each other: how long
+        each symbol is allowed to take, and how many molecules it is allowed to spend.
+      </p>
+
+      <figure class="fig">
+        <Image src={mrskBerTb} alt="Bit error rate against bit time for BCSK, OOK, MRSK, RTSK and MoSK on logarithmic axes; MRSK falls steeply to below ten to the minus ten while the others remain far higher." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          BER against bit time <em>t</em><sub>b</sub> for the compared schemes. MRSK separates from
+          the others by many orders of magnitude, and the gap <em>widens</em> as <em>t</em><sub>b</sub>
+          grows — which identifies inter-symbol interference, not noise, as the factor limiting the
+          scheme.
+        </figcaption>
+      </figure>
+
+      <p>
+        The second sweep is over <em>Q</em>, the base number of molecules per release. Raising
+        <em>Q</em> narrows the received distributions relative to their means and pushes them further
+        apart, so they overlap less and misdetection becomes less likely; MRSK's BER falls roughly
+        exponentially in <em>Q</em>. The contrast with RTSK is instructive rather than incidental —
+        its BER is flat across the whole range, because detection based on the first arriving
+        molecule does not care how many were sent behind it.
+      </p>
+
+      <figure class="fig">
+        <Image src={mrskBerQ} alt="Bit error rate against base molecule number Q for BCSK, OOK, MRSK, RTSK and MoSK; MRSK decreases steadily with Q while the other schemes stay nearly flat." widths={[600, 1000, 1400]} sizes="(max-width: 44rem) 92vw, 42rem" />
+        <figcaption>
+          BER against the base molecule number <em>Q</em>. MRSK improves steadily with the molecule
+          budget; the schemes it is compared against are close to flat over the same range.
+        </figcaption>
+      </figure>
+
+      <p>
+        Two design results are worth stating plainly, because they cut against the instinct that more
+        is better. Under moderate channel conditions, binary modulation with the <em>fewest</em>
+        molecule types is optimal. It is only when bit times must be short that higher-order
+        modulation, or more molecule types, earns its keep by mitigating inter-symbol interference —
+        which is what makes the scheme suited to high data rates.
       </p>
       <p>
         There is also a convex relationship between the ratio range and the BER, so the spacing of
@@ -213,6 +248,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         refining threshold optimisation under varying channel conditions, testing resilience in more
         diverse molecular networks, and integrating the scheme into real biological and
         nanotechnology-based platforms.
+      </p>
+      <p class="credit">
+        Figures © 2025 IEEE, reproduced from the article above by the author.
       </p>
       <p class="aside">
         A separate strand of this work, with the same group, asks what happens when the nanomachines
@@ -277,6 +315,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 0.15rem; }
   .frac .num { border-bottom: 1px solid var(--ink); padding: 0 0.35rem 0.1rem; line-height: 1.35; }
   .frac .den { padding: 0.1rem 0.35rem 0; line-height: 1.35; }
+
+  .credit {
+    margin-top: 2rem;
+    font-family: var(--font-mono); font-size: 0.74rem;
+    color: var(--muted);
+  }
 
   .aside {
     margin-top: 2rem; padding-top: 1.1rem;
