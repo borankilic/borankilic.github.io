@@ -1,7 +1,7 @@
 ---
 title: Five Years of Physics Olympiad
 description: What an olympiad problem asks of you that a school problem never does — and what years of being stuck taught me about how to think.
-date: 2026-08-10
+date: 2026-08-11
 tags: [Physics, Problem solving, Olympiad]
 draft: false
 ---
